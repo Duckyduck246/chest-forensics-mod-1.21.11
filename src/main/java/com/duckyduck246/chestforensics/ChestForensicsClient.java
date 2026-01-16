@@ -43,7 +43,9 @@ public class ChestForensicsClient implements ClientModInitializer {
                    LOGGER.info("ID: " + containerID);
                    if (Objects.equals(containerName, "Large Chest")) {
                        LOGGER.info("is a large chest");
-                       LOGGER.info("Pos" + getMainContainer(client.world.getBlockEntity(detectedPos)));
+                       if (client.world != null) {
+                           LOGGER.info("Pos" + getMainContainer(client.world.getBlockEntity(detectedPos)));
+                       }
                    }
                    else{
                        LOGGER.info("Pos" + detectedPos);
