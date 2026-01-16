@@ -20,6 +20,8 @@ import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 public class ChestForensicsClient implements ClientModInitializer {
     public static final String MOD_ID = "chat-logger";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
@@ -39,7 +41,13 @@ public class ChestForensicsClient implements ClientModInitializer {
                    containerID = handledScreen.getScreenHandler().syncId;
                    LOGGER.info("Name: " + containerName);
                    LOGGER.info("ID: " + containerID);
-                   LOGGER.info("Pos" + getMainContainer(client.world.getBlockEntity(detectedPos)));
+                   if (Objects.equals(containerName, "Large Chest")) {
+
+                       LOGGER.info("Pos" + getMainContainer(client.world.getBlockEntity(detectedPos)));
+                   }
+                   else{
+                       LOGGER.info("Pos" + detectedPos);
+                   }
                    detectedPos = null;
                    if(client.player != null && client.player.currentScreenHandler != null) {
                        ScreenHandler handler = handledScreen.getScreenHandler();
@@ -88,8 +96,24 @@ public class ChestForensicsClient implements ClientModInitializer {
             World world = chest.getWorld();
             if (world != null){
                 Direction chestFacing = chest.getCachedState().get(ChestBlock.FACING);
-                Direction rotatedFacing = chestFacing.rotateYClockwise();
-                BlockPos neighbor = chest.getPos().offset(rotatedFacing);
+                BlockPos neighbor;
+                switch(chestFacing){
+                    case NORTH: 
+                        neighbor = chest.getPos().east();
+                        break;
+                    case SOUTH:
+                        neighbor = chest.getPos().west();
+                        break;
+                    case WEST:
+                        neighbor = chest.getPos().north();
+                        break;
+                    case EAST:
+                        neighbor = chest.getPos().south();
+                        break;
+                    default:
+                        neighbor = chest.getPos().south();
+                        break;
+                }
                 BlockEntity neighborEntity = world.getBlockEntity(neighbor);
                 if (neighborEntity instanceof ChestBlockEntity neighborChest){
                     ChestType neighborType = neighborChest.getCachedState().get(ChestBlock.CHEST_TYPE);
