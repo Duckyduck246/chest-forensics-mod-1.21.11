@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "chest-forensics",
+	"version": "${version}",
+	"name": "Chest Forensics",
+	"description": "It detects changes or theft from containers such as chests!",
+	"authors": [
+		"Duckyduck246_"
+	],
+	"contact": {
+		"homepage": "https://github.com/Duckyduck246/chest-forensics-mod-1.21.11",
+		"sources": "https://github.com/Duckyduck246/chest-forensics-mod-1.21.11"
+	},
+	"license": "MIT",
+	"icon": "assets/chest-forensics/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.duckyduck246.chestforensics.ChestForensics"
+		],
+		"fabric-datagen": [
+			"com.duckyduck246.chestforensics.ChestForensicsDataGenerator"
+		],
+		"client": [
+			"com.duckyduck246.chestforensics.ChestForensicsClient"
+		]
+	},
+	"mixins": [
+		"chest-forensics.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.18.4",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}

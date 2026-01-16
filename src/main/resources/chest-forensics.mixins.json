@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.duckyduck246.chestforensics.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"ContainerInteractMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
