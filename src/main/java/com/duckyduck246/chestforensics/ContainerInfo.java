@@ -2,6 +2,7 @@ package com.duckyduck246.chestforensics;
 
 import net.fabricmc.api.ClientModInitializer;
 
+import com.duckyduck246.chestforensics.ChestForensicsClient;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.block.ChestBlock;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 public class ContainerInfo {
+    
     public String type;
     public BlockPos pos;
     public ArrayList<ItemStack> items;
@@ -50,9 +52,26 @@ public class ContainerInfo {
         items = i;
         tags = a;
         dir = d;
-        id = "containerId:" + type + pos.toString() + dir.toString();
+        id = "containerId:" + type + pos.toString() + dir.toString() + otherPos.toString();
         doubleChest = true;
         otherPos = o;
         total++;
+    }
+    
+    public void logInfo(){
+        ChestForensicsClient.LOGGER.info("type: " + type);
+        ChestForensicsClient.LOGGER.info("tags: " + tags);
+        ChestForensicsClient.LOGGER.info("direction: " + dir);
+        ChestForensicsClient.LOGGER.info(id);
+        ChestForensicsClient.LOGGER.info("isDoubleChest? " + doubleChest);
+        ChestForensicsClient.LOGGER.info("pos: " + pos);
+        if(doubleChest){
+            ChestForensicsClient.LOGGER.info("other pos: " + id);
+        }
+        ChestForensicsClient.LOGGER.info("items: " + items);   
+    }
+    
+    public void logTotal(){
+        ChestForensicsClient.LOGGER.info(total);
     }
 }
