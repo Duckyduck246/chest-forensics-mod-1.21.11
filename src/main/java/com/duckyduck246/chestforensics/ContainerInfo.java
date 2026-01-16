@@ -72,6 +72,6 @@ public class ContainerInfo {
     }
     
     public void logTotal(){
-        ChestForensicsClient.LOGGER.info(total);
+        ChestForensicsClient.LOGGER.info("" + total);
     }
 }
