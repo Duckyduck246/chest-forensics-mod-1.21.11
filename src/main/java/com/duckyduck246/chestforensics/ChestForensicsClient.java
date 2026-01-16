@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,11 +87,14 @@ public class ChestForensicsClient implements ClientModInitializer {
         if (type == ChestType.RIGHT){
             World world = chest.getWorld();
             if (world != null){
-                for (BlockPos neighbor : BlockPos.iterate(chest.getPos().add(-1, 0, -1), chest.getPos().add(1, 0, 1))){
-                    BlockEntity neighborEntity = world.getBlockEntity(neighbor);
-                    if (neighborEntity instanceof ChestBlockEntity neighborChest){
-                        ChestType neighborType = neighborChest.getCachedState().get(ChestBlock.CHEST_TYPE);
-                        if (neighborType == ChestType.LEFT) return neighborChest.getPos();
+                Direction chestFacing = chest.getCachedState().get(ChestBlock.FACING);
+                Direction rotatedFacing = chestFacing.rotateYClockwise();
+                BlockPos neighbor = chest.getPos().offset(rotatedFacing);
+                BlockEntity neighborEntity = world.getBlockEntity(neighbor);
+                if (neighborEntity instanceof ChestBlockEntity neighborChest){
+                    ChestType neighborType = neighborChest.getCachedState().get(ChestBlock.CHEST_TYPE);
+                    if (neighborType == ChestType.LEFT){
+                        return neighborChest.getPos();
                     }
                 }
             }
