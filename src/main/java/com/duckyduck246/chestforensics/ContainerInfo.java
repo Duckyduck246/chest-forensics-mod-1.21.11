@@ -27,6 +27,32 @@ public class ContainerInfo {
     public BlockPos pos;
     public ArrayList<ItemStack> items;
     public ArrayList<String> tags;
-
-
+    public Direction dir;
+    public String id;
+    public static int total = 0;
+    public boolean doubleChest;
+    public BlockPos otherPos;
+    
+    public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d){
+        type = t;
+        pos = p;
+        items = i;
+        tags = a;
+        dir = d;
+        id = "containerId:" + type + pos.toString() + dir.toString();
+        doubleChest = false;
+        total++;
+    }
+    
+    public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d, BlockPos o){
+        type = t;
+        pos = p;
+        items = i;
+        tags = a;
+        dir = d;
+        id = "containerId:" + type + pos.toString() + dir.toString();
+        doubleChest = true;
+        otherPos = o;
+        total++;
+    }
 }
