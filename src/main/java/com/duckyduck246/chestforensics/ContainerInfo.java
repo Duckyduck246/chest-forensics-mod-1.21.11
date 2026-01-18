@@ -84,8 +84,7 @@ public class ContainerInfo {
         switch(mode) {
             case 1:
                 if(client.player != null && client.player.currentScreenHandler != null) {
-                    if (screen instanceof HandledScreen<?> handledScreen){
-
+                    if (client.currentScreen instanceof HandledScreen<?> handledScreen){
                         ScreenHandler handler = handledScreen.getScreenHandler();
                         for (int a = 0; a < handler.slots.size(); a++){
                             ItemStack stack = handler.getSlot(a).getStack();
