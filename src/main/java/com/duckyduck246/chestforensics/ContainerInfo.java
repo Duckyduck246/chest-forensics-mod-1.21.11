@@ -84,11 +84,11 @@ public class ContainerInfo {
         switch(mode) {
             case 1:
                 if(client.player != null && client.player.currentScreenHandler != null) {
-                    if (client.currentScreen instanceof HandledScreen<?> handledScreen){
+                    if (client.currentScreen instanceof HandledScreen<?> handledScreen) {
                         ScreenHandler handler = handledScreen.getScreenHandler();
-                        for (int a = 0; a < handler.slots.size(); a++){
+                        for (int a = 0; a < handler.slots.size(); a++) {
                             ItemStack stack = handler.getSlot(a).getStack();
-                            if (!stack.isEmpty() && !(handler.getSlot(a).inventory instanceof net.minecraft.entity.player.PlayerInventory)){
+                            if (!stack.isEmpty() && !(handler.getSlot(a).inventory instanceof net.minecraft.entity.player.PlayerInventory)) {
                                 String nameOfItem = stack.getItem().getName().getString();
                                 int count = stack.getCount();
                                 ChestForensicsClient.LOGGER.info(a + ": " + count + "x " + nameOfItem);
@@ -96,7 +96,11 @@ public class ContainerInfo {
                         }
 
                     }
+                }
                 break;
+            case 2:
+                break;
+
         }
     }
 }
