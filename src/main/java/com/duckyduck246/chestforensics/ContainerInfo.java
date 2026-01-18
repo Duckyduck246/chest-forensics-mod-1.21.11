@@ -143,7 +143,7 @@ public class ContainerInfo {
     return null;
     }
 
-    public ArrayList<ItemStack> compareItems(ArrayList<ItemStack> oldStack, ArrayList<ItemStack> currentStack){
+    public static ArrayList<ItemStack> compareItems(ArrayList<ItemStack> oldStack, ArrayList<ItemStack> currentStack){
         if(oldStack.size() == currentStack.size()){
             ArrayList<ItemStack> diff = new  ArrayList<ItemStack>();
             for(int i = 0; i < oldStack.size(); i++){
@@ -181,5 +181,13 @@ public class ContainerInfo {
 
     public static String getID(String t, BlockPos p){
         return "containerId:" + t + p.toString();
+    }
+
+    public static String getID(String t, BlockPos p, BlockPos o){
+        return "containerId:" + t + p.toString() + o.toString();
+    }
+
+    public static String getID(String t, BlockPos p, Direction d, BlockPos o){
+        return "containerId:" + t + p.toString() + d.toString() + o.toString();
     }
 }

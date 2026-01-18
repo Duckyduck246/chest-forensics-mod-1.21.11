@@ -31,6 +31,8 @@ public class ChestForensicsClient implements ClientModInitializer {
     public static BlockPos detectedPos;
     public static Direction facing;
     public static ArrayList<ContainerInfo> allContainers = new ArrayList<ContainerInfo>();
+    String id;
+    public static ArrayList<ItemStack> compare = new ArrayList<ItemStack>();
 
     @Override
     public void onInitializeClient(){
@@ -41,6 +43,31 @@ public class ChestForensicsClient implements ClientModInitializer {
                     MinecraftClient client = MinecraftClient.getInstance();
                     containerName = screen.getTitle().getString();
                     containerID = handledScreen.getScreenHandler().syncId;
+                    id = "ERROR 1389843204";
+                    if (Objects.equals(containerName, "Large Chest")) {
+                        LOGGER.info("is a large chest");
+                        BlockPos mainContainer;
+                        if (client.world != null) {
+                            mainContainer = getMainContainer(client.world.getBlockEntity(detectedPos));
+                            id = ContainerInfo.getID(containerName, mainContainer, detectedPos);
+                        }
+                        else{
+                            LOGGER.info("ERROR: WORLD NOT INSTANTIATED");
+                            id = ContainerInfo.getID(containerName, detectedPos);
+                        }
+                    }
+                    else {
+                        id = ContainerInfo.getID(containerName, detectedPos);
+                    }
+                    for (int j = 0; j < allContainers.size(); j++){
+                        if(allContainers.get(j).id.equals(id)){
+                            compare = ContainerInfo.compareItems(allContainers.get(j).items, Objects.requireNonNull(ContainerInfo.listItems(1)));
+                        }
+                    }
+                    for (int o = 0; o < Objects.requireNonNull(compare).size(); o++){
+                        LOGGER.info("Compared: " + compare.get(o).toString());
+                    }
+
 
                     ScreenEvents.remove(screen).register(closedScreen -> {
                         LOGGER.info("Name: " + containerName);
@@ -58,7 +85,8 @@ public class ChestForensicsClient implements ClientModInitializer {
                                 LOGGER.info("ERROR: WORLD NOT INSTANTIATED");
                                 addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(1), new ArrayList<String>());
                             }
-                        } else {
+                        }
+                        else {
                             LOGGER.info("Pos" + detectedPos);
                             addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(1), new ArrayList<String>());
                         }
