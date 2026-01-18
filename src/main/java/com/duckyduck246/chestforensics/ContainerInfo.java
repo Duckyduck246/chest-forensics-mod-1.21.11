@@ -10,6 +10,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.Item;
 import net.minecraft.screen.ScreenHandler;
@@ -22,6 +23,7 @@ import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 
 public class ContainerInfo {
     
@@ -73,5 +75,29 @@ public class ContainerInfo {
     
     public void logTotal(){
         ChestForensicsClient.LOGGER.info("" + total);
+    }
+
+    public void compareItems(int mode){
+        MinecraftClient client = MinecraftClient.getInstance();
+
+
+        switch(mode) {
+            case 1:
+                if(client.player != null && client.player.currentScreenHandler != null) {
+                    if (screen instanceof HandledScreen<?> handledScreen){
+
+                        ScreenHandler handler = handledScreen.getScreenHandler();
+                        for (int a = 0; a < handler.slots.size(); a++){
+                            ItemStack stack = handler.getSlot(a).getStack();
+                            if (!stack.isEmpty() && !(handler.getSlot(a).inventory instanceof net.minecraft.entity.player.PlayerInventory)){
+                                String nameOfItem = stack.getItem().getName().getString();
+                                int count = stack.getCount();
+                                ChestForensicsClient.LOGGER.info(a + ": " + count + "x " + nameOfItem);
+                            }
+                        }
+
+                    }
+                break;
+        }
     }
 }
