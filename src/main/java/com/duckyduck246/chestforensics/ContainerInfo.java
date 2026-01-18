@@ -48,6 +48,16 @@ public class ContainerInfo {
         doubleChest = false;
         total++;
     }
+
+    public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a){
+        type = t;
+        pos = p;
+        items = i;
+        tags = a;
+        id = "containerId:" + type + pos.toString();
+        doubleChest = false;
+        total++;
+    }
     
     public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d, BlockPos o){
         type = t;
@@ -55,9 +65,20 @@ public class ContainerInfo {
         items = i;
         tags = a;
         dir = d;
+        otherPos = o;
         id = "containerId:" + type + pos.toString() + dir.toString() + otherPos.toString();
         doubleChest = true;
+        total++;
+    }
+
+    public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, BlockPos o){
+        type = t;
+        pos = p;
+        items = i;
+        tags = a;
         otherPos = o;
+        id = "containerId:" + type + pos.toString() + otherPos.toString();
+        doubleChest = true;
         total++;
     }
     
@@ -152,5 +173,13 @@ public class ContainerInfo {
             return diff;
         }
         return null;
+    }
+
+    public static String getID(String t, BlockPos p, Direction d){
+        return "containerId:" + t + p.toString() + d.toString();
+    }
+
+    public static String getID(String t, BlockPos p){
+        return "containerId:" + t + p.toString();
     }
 }

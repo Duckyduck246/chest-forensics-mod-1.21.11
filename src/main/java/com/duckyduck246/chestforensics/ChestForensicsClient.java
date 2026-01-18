@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ChestForensicsClient implements ClientModInitializer {
@@ -27,35 +28,45 @@ public class ChestForensicsClient implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     String containerName = "not yet";
     int containerID = 0;
-    public static BlockPos detectedPos = null;
+    public static BlockPos detectedPos;
+    public static Direction facing;
+    public static ArrayList<ContainerInfo> allContainers = new ArrayList<ContainerInfo>();
 
     @Override
     public void onInitializeClient(){
         LOGGER.info("Client Initialized");
 
         ScreenEvents.AFTER_INIT.register((minecraftClient, screen, i, i1) -> {
-
-            ScreenEvents.remove(screen).register(closedScreen -> {
                 if (screen instanceof HandledScreen<?> handledScreen){
                     MinecraftClient client = MinecraftClient.getInstance();
                     containerName = screen.getTitle().getString();
                     containerID = handledScreen.getScreenHandler().syncId;
-                    LOGGER.info("Name: " + containerName);
-                    LOGGER.info("ID: " + containerID);
-                    if (Objects.equals(containerName, "Large Chest")) {
-                        LOGGER.info("is a large chest");
-                        if (client.world != null) {
-                            LOGGER.info("Pos" + getMainContainer(client.world.getBlockEntity(detectedPos)));
+
+                    ScreenEvents.remove(screen).register(closedScreen -> {
+                        LOGGER.info("Name: " + containerName);
+                        LOGGER.info("ID: " + containerID);
+                        if (Objects.equals(containerName, "Large Chest")) {
+                            LOGGER.info("is a large chest");
+                            BlockPos mainContainer;
+                            if (client.world != null) {
+                                mainContainer = getMainContainer(client.world.getBlockEntity(detectedPos));
+                                LOGGER.info("Pos" + mainContainer);
+
+                                addContainerInfo(containerName, mainContainer, ContainerInfo.listItems(1), new ArrayList<String>(), detectedPos);;
+                            }
+                            else{
+                                LOGGER.info("ERROR: WORLD NOT INSTANTIATED");
+                                addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(1), new ArrayList<String>());
+                            }
+                        } else {
+                            LOGGER.info("Pos" + detectedPos);
+                            addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(1), new ArrayList<String>());
                         }
-                    }
-                    else{
-                        LOGGER.info("Pos" + detectedPos);
-                    }
-                    detectedPos = null;
-                    ContainerInfo.listItems(1);
+                        detectedPos = null;
+
+                    });
                }
-           });
-        });;
+        });
 
 
 
@@ -75,6 +86,50 @@ public class ChestForensicsClient implements ClientModInitializer {
         if (client.crosshairTarget instanceof BlockHitResult blockHit){
             detectedPos = blockHit.getBlockPos();
         }
+    }
+
+    public void addContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d, BlockPos o){
+        String id = ContainerInfo.getID(t, p, d);
+        for (int j = 0; j < allContainers.size(); j++){
+            if(allContainers.get(j).id.equals(id)){
+                allContainers.set(j, new ContainerInfo(t, p, i, a, o));
+                return;
+            }
+        }
+        allContainers.add(new ContainerInfo(t, p, i, a, o));
+    }
+
+    public void addContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d){
+        String id = ContainerInfo.getID(t, p, d);
+        for (int j = 0; j < allContainers.size(); j++){
+            if(allContainers.get(j).id.equals(id)){
+                allContainers.set(j, new ContainerInfo(t, p, i, a));
+                return;
+            }
+        }
+        allContainers.add(new ContainerInfo(t, p, i, a));
+    }
+
+    public void addContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, BlockPos o){
+        String id = ContainerInfo.getID(t, p);
+        for (int j = 0; j < allContainers.size(); j++){
+            if(allContainers.get(j).id.equals(id)){
+                allContainers.set(j, new ContainerInfo(t, p, i, a, o));
+                return;
+            }
+        }
+        allContainers.add(new ContainerInfo(t, p, i, a, o));
+    }
+
+    public void addContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a){
+        String id = ContainerInfo.getID(t, p);
+        for (int j = 0; j < allContainers.size(); j++){
+            if(allContainers.get(j).id.equals(id)){
+                allContainers.set(j, new ContainerInfo(t, p, i, a));
+                return;
+            }
+        }
+        allContainers.add(new ContainerInfo(t, p, i, a));
     }
 
     public BlockPos getMainContainer(BlockEntity blockEntity){
