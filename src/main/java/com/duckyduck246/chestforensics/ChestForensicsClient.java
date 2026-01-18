@@ -34,24 +34,25 @@ public class ChestForensicsClient implements ClientModInitializer {
         LOGGER.info("Client Initialized");
 
         ScreenEvents.AFTER_INIT.register((minecraftClient, screen, i, i1) -> {
-           ScreenEvents.remove(screen).register(closedScreen -> {
-               if (screen instanceof HandledScreen<?> handledScreen){
-                   MinecraftClient client = MinecraftClient.getInstance();
-                   containerName = screen.getTitle().getString();
-                   containerID = handledScreen.getScreenHandler().syncId;
-                   LOGGER.info("Name: " + containerName);
-                   LOGGER.info("ID: " + containerID);
-                   if (Objects.equals(containerName, "Large Chest")) {
-                       LOGGER.info("is a large chest");
-                       if (client.world != null) {
-                           LOGGER.info("Pos" + getMainContainer(client.world.getBlockEntity(detectedPos)));
-                       }
-                   }
-                   else{
-                       LOGGER.info("Pos" + detectedPos);
-                   }
-                   detectedPos = null;
-                   ContainerInfo.listItems(1);
+
+            ScreenEvents.remove(screen).register(closedScreen -> {
+                if (screen instanceof HandledScreen<?> handledScreen){
+                    MinecraftClient client = MinecraftClient.getInstance();
+                    containerName = screen.getTitle().getString();
+                    containerID = handledScreen.getScreenHandler().syncId;
+                    LOGGER.info("Name: " + containerName);
+                    LOGGER.info("ID: " + containerID);
+                    if (Objects.equals(containerName, "Large Chest")) {
+                        LOGGER.info("is a large chest");
+                        if (client.world != null) {
+                            LOGGER.info("Pos" + getMainContainer(client.world.getBlockEntity(detectedPos)));
+                        }
+                    }
+                    else{
+                        LOGGER.info("Pos" + detectedPos);
+                    }
+                    detectedPos = null;
+                    ContainerInfo.listItems(1);
                }
            });
         });;

@@ -91,8 +91,9 @@ public class ContainerInfo {
                             if (!stack.isEmpty() && !(handler.getSlot(a).inventory instanceof net.minecraft.entity.player.PlayerInventory)) {
                                 items.add(stack);
                                 String nameOfItem = stack.getItem().getName().getString();
+                                String dataOfItem = stack.getComponents().toString();
                                 int count = stack.getCount();
-                                ChestForensicsClient.LOGGER.info(a + ": " + count + "x " + nameOfItem);
+                                ChestForensicsClient.LOGGER.info(a + ": " + count + "x " + nameOfItem + "      (" + dataOfItem + ")");
                             }
                         }
                         return items;
@@ -121,19 +122,34 @@ public class ContainerInfo {
     return null;
     }
 
-    public ArrayList<ItemStack> compareItems(ArrayList<ItemStack> a, ArrayList<ItemStack> b){
-        if(a.size() == b.size()){
-            for(int i = 0; i < a.size(); i++){
-                ItemStack stackA = a.get(i);
-                ItemStack stackB = b.get(i);
+    public ArrayList<ItemStack> compareItems(ArrayList<ItemStack> oldStack, ArrayList<ItemStack> currentStack){
+        if(oldStack.size() == currentStack.size()){
+            ArrayList<ItemStack> diff = new  ArrayList<ItemStack>();
+            for(int i = 0; i < oldStack.size(); i++){
+                ItemStack stackA = oldStack.get(i);
+                ItemStack stackB = currentStack .get(i);
                 int countA = stackA.getCount();
                 int countB = stackB.getCount();
-                if(!stackA.equals(stackB)){
-                    if(!stackA.getItem().getName().equals(stackB.getItem().getName())) {
-
+                if(!((ItemStack.areItemsAndComponentsEqual(stackA, stackB)) && (countA == countB))){
+                    if(ItemStack.areItemsAndComponentsEqual(stackA, stackB)) {
+                        ChestForensicsClient.LOGGER.info(stackA.getComponents().toString());
+                        ItemStack itemStack= stackA;
+                        itemStack.setCount(stackB.getCount() - stackA.getCount());
+                        diff.add(itemStack);
+                    }
+                    else{
+                        ChestForensicsClient.LOGGER.info(stackA.getComponents().toString());
+                        ChestForensicsClient.LOGGER.info(stackB.getComponents().toString());
+                        ItemStack itemStack1 = stackA;
+                        itemStack1.setCount(-stackA.getCount());
+                        diff.add(itemStack1);
+                        ItemStack itemStack2 = stackB;
+                        itemStack2.setCount(stackB.getCount());
+                        diff.add(itemStack2);
                     }
                 }
             }
+            return diff;
         }
         return null;
     }
