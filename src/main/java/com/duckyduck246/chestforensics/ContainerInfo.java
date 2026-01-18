@@ -20,6 +20,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
@@ -77,30 +78,63 @@ public class ContainerInfo {
         ChestForensicsClient.LOGGER.info("" + total);
     }
 
-    public void compareItems(int mode){
+    public static ArrayList<ItemStack> listItems(int mode){
         MinecraftClient client = MinecraftClient.getInstance();
-
-
         switch(mode) {
             case 1:
                 if(client.player != null && client.player.currentScreenHandler != null) {
                     if (client.currentScreen instanceof HandledScreen<?> handledScreen) {
                         ScreenHandler handler = handledScreen.getScreenHandler();
+                        ArrayList<ItemStack> items = new ArrayList<ItemStack>();
                         for (int a = 0; a < handler.slots.size(); a++) {
                             ItemStack stack = handler.getSlot(a).getStack();
                             if (!stack.isEmpty() && !(handler.getSlot(a).inventory instanceof net.minecraft.entity.player.PlayerInventory)) {
+                                items.add(stack);
                                 String nameOfItem = stack.getItem().getName().getString();
                                 int count = stack.getCount();
                                 ChestForensicsClient.LOGGER.info(a + ": " + count + "x " + nameOfItem);
                             }
                         }
-
+                        return items;
                     }
                 }
                 break;
             case 2:
+                if(client.player != null && client.player.currentScreenHandler != null) {
+                    if (client.currentScreen instanceof HandledScreen<?> handledScreen) {
+                        ScreenHandler handler = handledScreen.getScreenHandler();
+                        ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+                        for (int a = 0; a < handler.slots.size(); a++) {
+                            ItemStack stack = handler.getSlot(a).getStack();
+                            if (!stack.isEmpty() && !(handler.getSlot(a).inventory instanceof net.minecraft.entity.player.PlayerInventory)) {
+                                items.add(stack);
+                                String nameOfItem = stack.getItem().getName().getString();
+                                int count = stack.getCount();
+                            }
+                        }
+                        return items;
+                    }
+                }
                 break;
 
         }
+    return null;
+    }
+
+    public ArrayList<ItemStack> compareItems(ArrayList<ItemStack> a, ArrayList<ItemStack> b){
+        if(a.size() == b.size()){
+            for(int i = 0; i < a.size(); i++){
+                ItemStack stackA = a.get(i);
+                ItemStack stackB = b.get(i);
+                int countA = stackA.getCount();
+                int countB = stackB.getCount();
+                if(!stackA.equals(stackB)){
+                    if(!stackA.getItem().getName().equals(stackB.getItem().getName())) {
+
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

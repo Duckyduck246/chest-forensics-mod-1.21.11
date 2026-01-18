@@ -51,17 +51,7 @@ public class ChestForensicsClient implements ClientModInitializer {
                        LOGGER.info("Pos" + detectedPos);
                    }
                    detectedPos = null;
-                   if(client.player != null && client.player.currentScreenHandler != null) {
-                       ScreenHandler handler = handledScreen.getScreenHandler();
-                       for (int a = 0; a < handler.slots.size(); a++){
-                           ItemStack stack = handler.getSlot(a).getStack();
-                           if (!stack.isEmpty() && !(handler.getSlot(a).inventory instanceof net.minecraft.entity.player.PlayerInventory)){
-                               String nameOfItem = stack.getItem().getName().getString();
-                               int count = stack.getCount();
-                               LOGGER.info(a + ": " + count + "x " + nameOfItem);
-                           }
-                       }
-                   }
+                   ContainerInfo.listItems(1);
                }
            });
         });;
