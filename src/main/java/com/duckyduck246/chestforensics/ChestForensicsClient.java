@@ -10,10 +10,13 @@ import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.item.ItemStack;
 
+import net.minecraft.screen.ScreenHandlerListener;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -34,11 +37,11 @@ public class ChestForensicsClient implements ClientModInitializer {
     public static ArrayList<ContainerInfo> allContainers = new ArrayList<ContainerInfo>();
     String id;
     public static ArrayList<PuedoItem> compare = new ArrayList<>();
+    boolean allAir;
 
     @Override
     public void onInitializeClient(){
         LOGGER.info("Client Initialized");
-
         ScreenEvents.AFTER_INIT.register((minecraftClient, screen, i, i1) -> {
             LOGGER.info("~~~CHEST OPENNENEND~~~");
                 if (screen instanceof HandledScreen<?> handledScreen){
@@ -46,14 +49,19 @@ public class ChestForensicsClient implements ClientModInitializer {
                     containerName = screen.getTitle().getString();
                     containerID = handledScreen.getScreenHandler().syncId;
                     ScreenHandler handler = handledScreen.getScreenHandler();
+                    
                     if (!(handler instanceof GenericContainerScreenHandler)) {
+                        LOGGER.info("(handler instanceof GenericContainerScreenHandler)");
                         return;
                     }
 
-                    id = "ERROR 1389843204";
-                    LOGGER.info("id set");
-                    LOGGER.info("" + Objects.requireNonNull(detectedPos));
-                    MinecraftClient.getInstance().execute(() -> {
+                    ScreenEvents.remove(screen).register(closedScreen -> {
+                        LOGGER.info("~~~CHEST CLOCLOLOSOSESESED~~~");
+
+                        id = "ERROR 1389843204";
+                        LOGGER.info("id set");
+                        LOGGER.info("" + Objects.requireNonNull(detectedPos));
+
 
                         if (Objects.equals(containerName, "Large Chest")) {
                             LOGGER.info("is a large chest");
@@ -71,17 +79,13 @@ public class ChestForensicsClient implements ClientModInitializer {
                         LOGGER.info("got after geting id");
                         for (int j = 0; j < allContainers.size(); j++) {
                             if (allContainers.get(j).id.equals(id)) {
-                                LOGGER.info("new stack:" + ContainerInfo.listItems(1));
-                                compare = ContainerInfo.compareItems(allContainers.get(j).items, ContainerInfo.listItems(1));
+                                LOGGER.info("new stack:" + ContainerInfo.listItems(2));
+                                compare = ContainerInfo.compareItems(allContainers.get(j).items, ContainerInfo.listItems(2));
                             }
                         }
                         for (int o = 0; o < compare.size(); o++) {
                             LOGGER.info("Compared: " + compare.get(o).getString());
                         }
-
-                    });
-                    ScreenEvents.remove(screen).register(closedScreen -> {
-                        LOGGER.info("~~~CHEST CLOCLOLOSOSESESED~~~");
                         LOGGER.info("Name: " + containerName);
                         LOGGER.info("ID: " + containerID);
                         if (Objects.equals(containerName, "Large Chest")) {
@@ -91,17 +95,19 @@ public class ChestForensicsClient implements ClientModInitializer {
                                 mainContainer = getMainContainer(client.world.getBlockEntity(detectedPos));
                                 LOGGER.info("Pos" + mainContainer);
 
-                                addContainerInfo(containerName, mainContainer, ContainerInfo.listItems(1), new ArrayList<String>(), detectedPos);;
+                                addContainerInfo(containerName, mainContainer, ContainerInfo.listItems(2), new ArrayList<String>(), detectedPos);;
                             }
                             else{
                                 LOGGER.info("ERROR: WORLD NOT INSTANTIATED");
-                                addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(1), new ArrayList<String>());
+                                addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(2), new ArrayList<String>());
                             }
                         }
                         else {
                             LOGGER.info("Pos" + detectedPos);
-                            addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(1), new ArrayList<String>());
+                            addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(2), new ArrayList<String>());
                         }
+
+
                         detectedPos = null;
 
                     });

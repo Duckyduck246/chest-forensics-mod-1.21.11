@@ -121,7 +121,6 @@ public class ContainerInfo {
                                 ChestForensicsClient.LOGGER.info(a + ": " + count + "x " + nameOfItem + "      (" + dataOfItem + ")");
                             }
                             else {
-                                ChestForensicsClient.LOGGER.info("(handler.getSlot(a).inventory instanceof net.minecraft.entity.player.PlayerInventory)");
                             }
                         }
                         ChestForensicsClient.LOGGER.info("returned items");
@@ -136,6 +135,24 @@ public class ContainerInfo {
                 }
                 break;
             case 2:
+                if(client.player != null && client.player.currentScreenHandler != null) {
+                    if (client.currentScreen instanceof HandledScreen<?> handledScreen) {
+                        ScreenHandler handler = handledScreen.getScreenHandler();
+                        ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+                        for (int a = 0; a < handler.slots.size(); a++) {
+                            ItemStack stack = handler.getSlot(a).getStack();
+                            if (!(handler.getSlot(a).inventory instanceof net.minecraft.entity.player.PlayerInventory)) {
+                                items.add(stack.copy());
+                                String nameOfItem = stack.getItem().getName().getString();
+                                String dataOfItem = stack.getComponents().toString();
+                                int count = stack.getCount();
+                            }
+                            else {
+                            }
+                        }
+                        return items;
+                    }
+                }
                 break;
 
         }

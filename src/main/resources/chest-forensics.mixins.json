@@ -3,7 +3,8 @@
 	"package": "com.duckyduck246.chestforensics.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ContainerInteractMixin"
+		"ContainerInteractMixin",
+		"ContainerDetectionMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
