@@ -1,5 +1,6 @@
 package com.duckyduck246.chestforensics.mixin;
 
+import com.duckyduck246.chestforensics.PuedoItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,8 @@ import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.enums.ChestType;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(ScreenHandler.class)
@@ -42,6 +45,10 @@ public abstract class ContainerDetectionMixin{
                     if (!stack.isEmpty()) {
                         ChestForensicsClient.LOGGER.info("Slot " + i + ": " + stack.getName().getString() + " x" + stack.getCount());
                     }
+                }
+                ArrayList<PuedoItem> compare1 = ChestForensicsClient.getCompare();
+                for (int o = 0; o < compare1.size(); o++) {
+                    ChestForensicsClient.LOGGER.info("Compared: " + compare1.get(o).getString());
                 }
             }
         }

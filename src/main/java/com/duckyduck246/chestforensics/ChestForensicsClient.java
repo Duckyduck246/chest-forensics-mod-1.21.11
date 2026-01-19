@@ -30,12 +30,12 @@ import java.util.Objects;
 public class ChestForensicsClient implements ClientModInitializer {
     public static final String MOD_ID = "chat-logger";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    String containerName = "not yet";
+    static String containerName = "not yet";
     int containerID = 0;
     public static BlockPos detectedPos;
     public static Direction facing;
     public static ArrayList<ContainerInfo> allContainers = new ArrayList<ContainerInfo>();
-    String id;
+    static String id;
     public static ArrayList<PuedoItem> compare = new ArrayList<>();
     boolean allAir;
 
@@ -58,34 +58,6 @@ public class ChestForensicsClient implements ClientModInitializer {
                     ScreenEvents.remove(screen).register(closedScreen -> {
                         LOGGER.info("~~~CHEST CLOCLOLOSOSESESED~~~");
 
-                        id = "ERROR 1389843204";
-                        LOGGER.info("id set");
-                        LOGGER.info("" + Objects.requireNonNull(detectedPos));
-
-
-                        if (Objects.equals(containerName, "Large Chest")) {
-                            LOGGER.info("is a large chest");
-                            BlockPos mainContainer;
-                            if (client.world != null) {
-                                mainContainer = getMainContainer(client.world.getBlockEntity(detectedPos));
-                                id = ContainerInfo.getID(containerName, mainContainer, detectedPos);
-                            } else {
-                                LOGGER.info("ERROR: WORLD NOT INSTANTIATED");
-                                id = ContainerInfo.getID(containerName, detectedPos);
-                            }
-                        } else {
-                            id = ContainerInfo.getID(containerName, detectedPos);
-                        }
-                        LOGGER.info("got after geting id");
-                        for (int j = 0; j < allContainers.size(); j++) {
-                            if (allContainers.get(j).id.equals(id)) {
-                                LOGGER.info("new stack:" + ContainerInfo.listItems(2));
-                                compare = ContainerInfo.compareItems(allContainers.get(j).items, ContainerInfo.listItems(2));
-                            }
-                        }
-                        for (int o = 0; o < compare.size(); o++) {
-                            LOGGER.info("Compared: " + compare.get(o).getString());
-                        }
                         LOGGER.info("Name: " + containerName);
                         LOGGER.info("ID: " + containerID);
                         if (Objects.equals(containerName, "Large Chest")) {
@@ -178,7 +150,42 @@ public class ChestForensicsClient implements ClientModInitializer {
         allContainers.add(new ContainerInfo(t, p, i, a));
     }
 
-    public BlockPos getMainContainer(BlockEntity blockEntity){
+    public static ArrayList<PuedoItem> getCompare(){
+        MinecraftClient client = MinecraftClient.getInstance();
+        ArrayList<PuedoItem> compared = new ArrayList<>();
+        if (client.currentScreen instanceof HandledScreen<?> handledScreen) {
+            ScreenHandler handler = handledScreen.getScreenHandler();
+            id = "ERROR 1389843204";
+            LOGGER.info("id set");
+            LOGGER.info("" + Objects.requireNonNull(detectedPos));
+
+
+            if (Objects.equals(containerName, "Large Chest")) {
+                LOGGER.info("is a large chest");
+                BlockPos mainContainer;
+                if (client.world != null) {
+                    mainContainer = getMainContainer(client.world.getBlockEntity(detectedPos));
+                    id = ContainerInfo.getID(containerName, mainContainer, detectedPos);
+                } else {
+                    LOGGER.info("ERROR: WORLD NOT INSTANTIATED");
+                    id = ContainerInfo.getID(containerName, detectedPos);
+                }
+            } else {
+                id = ContainerInfo.getID(containerName, detectedPos);
+            }
+            LOGGER.info("got after geting id");
+            for (int j = 0; j < allContainers.size(); j++) {
+                if (allContainers.get(j).id.equals(id)) {
+                    LOGGER.info("new stack:" + ContainerInfo.listItems(2));
+                    compared = ContainerInfo.compareItems(allContainers.get(j).items, ContainerInfo.listItems(2));
+                }
+            }
+            return compared;
+        }
+        return compared;
+    }
+
+    public static BlockPos getMainContainer(BlockEntity blockEntity){
         LOGGER.info("getMainContainer method called");
         if (!(blockEntity instanceof ChestBlockEntity chest)){
             LOGGER.info("not a chest");
@@ -232,6 +239,7 @@ public class ChestForensicsClient implements ClientModInitializer {
 
         return blockEntity.getPos();
     }
+
 
 
 }
