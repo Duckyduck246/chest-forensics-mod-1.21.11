@@ -31,10 +31,10 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 public class PuedoItem {
     public final int count;
     public final String name;
-    public final ComponentMap itemComponents;
+    public final String itemComponents;
     public PuedoItem(int c, ComponentMap m, String n){
         count = c;
-        itemComponents = m;
+        itemComponents = m.toString();
         name = n;
         ChestForensicsClient.LOGGER.info("new PuedoItem created: count: " + c + "componets: " + m);
     }

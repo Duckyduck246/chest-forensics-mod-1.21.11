@@ -2,6 +2,11 @@ package com.duckyduck246.chestforensics;
 
 import net.fabricmc.api.ClientModInitializer;
 
+import net.fabricmc.loader.api.FabricLoader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.block.ChestBlock;
@@ -23,6 +28,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spongepowered.include.com.google.gson.Gson;
+import org.spongepowered.include.com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -38,6 +45,8 @@ public class ChestForensicsClient implements ClientModInitializer {
     static String id;
     public static ArrayList<PuedoItem> compare = new ArrayList<>();
     boolean allAir;
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
 
     @Override
     public void onInitializeClient(){
@@ -67,7 +76,7 @@ public class ChestForensicsClient implements ClientModInitializer {
                                 mainContainer = getMainContainer(client.world.getBlockEntity(detectedPos));
                                 LOGGER.info("Pos" + mainContainer);
 
-                                addContainerInfo(containerName, mainContainer, ContainerInfo.listItems(2), new ArrayList<String>(), detectedPos);;
+                                addContainerInfo(containerName, mainContainer, ContainerInfo.listItems(2), new ArrayList<String>());;
                             }
                             else{
                                 LOGGER.info("ERROR: WORLD NOT INSTANTIATED");
@@ -78,6 +87,7 @@ public class ChestForensicsClient implements ClientModInitializer {
                             LOGGER.info("Pos" + detectedPos);
                             addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(2), new ArrayList<String>());
                         }
+                        saveContainersToTXT();
 
 
                         detectedPos = null;
@@ -183,6 +193,24 @@ public class ChestForensicsClient implements ClientModInitializer {
             return compared;
         }
         return compared;
+    }
+
+    public static void saveContainersToTXT(){
+        Path configDir = FabricLoader.getInstance().getConfigDir().resolve("chest-forensics");
+        File file = configDir.resolve("chest_forensices_data.txt").toFile();
+        file.getParentFile().mkdirs();
+        try(FileWriter writer = new FileWriter(file, false)){
+            writer.write("Chest Forensics Export\n");
+            writer.write("Last updated: " + java.time.LocalDateTime.now() + "\n\n");
+            for(ContainerInfo container : allContainers){
+                writer.write("Container: " + container.type  + "\n");
+            }
+            LOGGER.info("exported to da txt");
+
+        }
+        catch (IOException e){
+            LOGGER.info("broke; not exported to da txt");
+        }
     }
 
     public static BlockPos getMainContainer(BlockEntity blockEntity){

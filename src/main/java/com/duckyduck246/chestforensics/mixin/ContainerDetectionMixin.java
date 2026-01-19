@@ -1,5 +1,6 @@
 package com.duckyduck246.chestforensics.mixin;
 
+
 import com.duckyduck246.chestforensics.PuedoItem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
