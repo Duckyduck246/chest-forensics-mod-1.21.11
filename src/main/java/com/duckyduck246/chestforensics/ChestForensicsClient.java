@@ -206,7 +206,11 @@ public class ChestForensicsClient implements ClientModInitializer {
                 writer.write("Container Type: " + container.type  + "\n");
                 writer.write("Pos: " + container.pos  + "\n");
                 writer.write("ID: " + container.id  + "\n");
-                writer.write("Items: " + container.items  + "\n");
+                writer.write("Items: ");
+                for(ItemStack item : container.items){
+                    writer.write("(" + item.getComponents() + ") ");
+                }
+                writer.write("\n\n");
             }
             LOGGER.info("exported to da txt");
 
