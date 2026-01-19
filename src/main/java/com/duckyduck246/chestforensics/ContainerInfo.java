@@ -99,6 +99,7 @@ public class ContainerInfo {
     
     public void logTotal(){
         ChestForensicsClient.LOGGER.info("" + total);
+        ChestForensicsClient.LOGGER.info("" + total); //remove latterer
     }
 
     public static ArrayList<ItemStack> listItems(int mode){
@@ -141,71 +142,36 @@ public class ContainerInfo {
         return null;
     }
 
-    public static ArrayList<ItemStack> compareItems(ArrayList<ItemStack> oldStack, ArrayList<ItemStack> currentStack){
+    public static ArrayList<PuedoItem> compareItems(ArrayList<ItemStack> oldStack, ArrayList<ItemStack> currentStack){
         ChestForensicsClient.LOGGER.info("compareItems method called");
-        ArrayList<ItemStack> diff = new ArrayList<ItemStack>();
+        ArrayList<PuedoItem> diff = new ArrayList<>();
         ChestForensicsClient.LOGGER.info("old size: " + oldStack.size());
         ChestForensicsClient.LOGGER.info("new size: " + currentStack.size());
 
-        if(oldStack.size() >= currentStack.size()){
-            for(int i = 0; i < oldStack.size(); i++){
-                if(i < currentStack.size()){
-                    ItemStack stackA = oldStack.get(i);
-                    ItemStack stackB = currentStack.get(i);
-                    int countA = stackA.getCount();
-                    int countB = stackB.getCount();
-                    if(!((ItemStack.areItemsAndComponentsEqual(stackA, stackB)) && (countA == countB))) {
-                        if (ItemStack.areItemsAndComponentsEqual(stackA, stackB)) {
-                            ChestForensicsClient.LOGGER.info(stackA.getComponents().toString());
-                            ItemStack itemStack = stackA.copy();
-                            itemStack.setCount(stackB.getCount() - stackA.getCount());
-                            diff.add(itemStack);
-                        } else {
-                            ChestForensicsClient.LOGGER.info(stackA.getComponents().toString());
-                            ChestForensicsClient.LOGGER.info(stackB.getComponents().toString());
-                            ItemStack itemStack1 = stackA.copy();
-                            itemStack1.setCount(-stackA.getCount());
-                            diff.add(itemStack1);
-                            ItemStack itemStack2 = stackB.copy();
-                            itemStack2.setCount(stackB.getCount());
-                            diff.add(itemStack2);
-                        }
+        for(int i = 0; i < oldStack.size(); i++){
+            if(i < currentStack.size()){
+                ItemStack stackA = oldStack.get(i);
+                ItemStack stackB = currentStack.get(i);
+                int countA = stackA.getCount();
+                int countB = stackB.getCount();
+                if(!((ItemStack.areItemsAndComponentsEqual(stackA, stackB)) && (countA == countB))) {
+                    if (ItemStack.areItemsAndComponentsEqual(stackA, stackB)) {
+                        ChestForensicsClient.LOGGER.info("index: " + i);
+                        PuedoItem itemStack = new PuedoItem(stackB.getCount() - stackA.getCount(), stackA.getComponents(), stackA.getName().getString());
+                        diff.add(itemStack);
+                    } else {
+                        ChestForensicsClient.LOGGER.info("index: " + i);
+                        ChestForensicsClient.LOGGER.info(stackB.getComponents().toString());
+                        PuedoItem itemStack1 = new PuedoItem(-stackA.getCount(), stackA.getComponents(), stackA.getName().getString());
+                        diff.add(itemStack1);
+                        PuedoItem itemStack2 = new PuedoItem(stackB.getCount(), stackB.getComponents(), stackB.getName().getString());
+                        diff.add(itemStack2);
                     }
                 }
             }
-            ChestForensicsClient.LOGGER.info("returned diff: " + diff);
-            return diff;
         }
-        else{
-            for(int i = 0; i < currentStack.size(); i++){
-                if(i < oldStack.size()){
-                    ItemStack stackA = oldStack.get(i);
-                    ItemStack stackB = currentStack.get(i);
-                    int countA = stackA.getCount();
-                    int countB = stackB.getCount();
-                    if(!((ItemStack.areItemsAndComponentsEqual(stackA, stackB)) && (countA == countB))) {
-                        if (ItemStack.areItemsAndComponentsEqual(stackA, stackB)) {
-                            ChestForensicsClient.LOGGER.info(stackA.getComponents().toString());
-                            ItemStack itemStack = stackA.copy();
-                            itemStack.setCount(stackB.getCount() - stackA.getCount());
-                            diff.add(itemStack);
-                        } else {
-                            ChestForensicsClient.LOGGER.info(stackA.getComponents().toString());
-                            ChestForensicsClient.LOGGER.info(stackB.getComponents().toString());
-                            ItemStack itemStack1 = stackA.copy();
-                            itemStack1.setCount(-stackA.getCount());
-                            diff.add(itemStack1);
-                            ItemStack itemStack2 = stackB.copy();
-                            itemStack2.setCount(stackB.getCount());
-                            diff.add(itemStack2);
-                        }
-                    }
-                }
-            }
-            ChestForensicsClient.LOGGER.info("returned null");
-            return diff;
-        }
-
+        ChestForensicsClient.LOGGER.info("returned diff: " + diff);
+        return diff;
     }
 
     public static String getID(String t, BlockPos p, Direction d){

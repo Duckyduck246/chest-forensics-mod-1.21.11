@@ -33,13 +33,14 @@ public class ChestForensicsClient implements ClientModInitializer {
     public static Direction facing;
     public static ArrayList<ContainerInfo> allContainers = new ArrayList<ContainerInfo>();
     String id;
-    public static ArrayList<ItemStack> compare = new ArrayList<ItemStack>();
+    public static ArrayList<PuedoItem> compare = new ArrayList<>();
 
     @Override
     public void onInitializeClient(){
         LOGGER.info("Client Initialized");
 
         ScreenEvents.AFTER_INIT.register((minecraftClient, screen, i, i1) -> {
+            LOGGER.info("~~~CHEST OPENNENEND~~~");
                 if (screen instanceof HandledScreen<?> handledScreen){
                     MinecraftClient client = MinecraftClient.getInstance();
                     containerName = screen.getTitle().getString();
@@ -52,34 +53,35 @@ public class ChestForensicsClient implements ClientModInitializer {
                     id = "ERROR 1389843204";
                     LOGGER.info("id set");
                     LOGGER.info("" + Objects.requireNonNull(detectedPos));
-                    if (Objects.equals(containerName, "Large Chest")) {
-                        LOGGER.info("is a large chest");
-                        BlockPos mainContainer;
-                        if (client.world != null) {
-                            mainContainer = getMainContainer(client.world.getBlockEntity(detectedPos));
-                            id = ContainerInfo.getID(containerName, mainContainer, detectedPos);
-                        }
-                        else{
-                            LOGGER.info("ERROR: WORLD NOT INSTANTIATED");
+                    MinecraftClient.getInstance().execute(() -> {
+
+                        if (Objects.equals(containerName, "Large Chest")) {
+                            LOGGER.info("is a large chest");
+                            BlockPos mainContainer;
+                            if (client.world != null) {
+                                mainContainer = getMainContainer(client.world.getBlockEntity(detectedPos));
+                                id = ContainerInfo.getID(containerName, mainContainer, detectedPos);
+                            } else {
+                                LOGGER.info("ERROR: WORLD NOT INSTANTIATED");
+                                id = ContainerInfo.getID(containerName, detectedPos);
+                            }
+                        } else {
                             id = ContainerInfo.getID(containerName, detectedPos);
                         }
-                    }
-                    else {
-                        id = ContainerInfo.getID(containerName, detectedPos);
-                    }
-                    LOGGER.info("got after geting id");
-                    for (int j = 0; j < allContainers.size(); j++){
-                        if(allContainers.get(j).id.equals(id)){
-                            LOGGER.info("new stack:" + ContainerInfo.listItems(1));
-                            compare = ContainerInfo.compareItems(allContainers.get(j).items, ContainerInfo.listItems(1));
+                        LOGGER.info("got after geting id");
+                        for (int j = 0; j < allContainers.size(); j++) {
+                            if (allContainers.get(j).id.equals(id)) {
+                                LOGGER.info("new stack:" + ContainerInfo.listItems(1));
+                                compare = ContainerInfo.compareItems(allContainers.get(j).items, ContainerInfo.listItems(1));
+                            }
                         }
-                    }
-                    for (int o = 0; o < compare.size(); o++){
-                        LOGGER.info("Compared: " + compare.get(o).toString());
-                    }
+                        for (int o = 0; o < compare.size(); o++) {
+                            LOGGER.info("Compared: " + compare.get(o).getString());
+                        }
 
-
+                    });
                     ScreenEvents.remove(screen).register(closedScreen -> {
+                        LOGGER.info("~~~CHEST CLOCLOLOSOSESESED~~~");
                         LOGGER.info("Name: " + containerName);
                         LOGGER.info("ID: " + containerID);
                         if (Objects.equals(containerName, "Large Chest")) {
