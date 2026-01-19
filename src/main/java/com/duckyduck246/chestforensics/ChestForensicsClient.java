@@ -203,7 +203,10 @@ public class ChestForensicsClient implements ClientModInitializer {
             writer.write("Chest Forensics Export\n");
             writer.write("Last updated: " + java.time.LocalDateTime.now() + "\n\n");
             for(ContainerInfo container : allContainers){
-                writer.write("Container: " + container.type  + "\n");
+                writer.write("Container Type: " + container.type  + "\n");
+                writer.write("Pos: " + container.pos  + "\n");
+                writer.write("ID: " + container.id  + "\n");
+                writer.write("Items: " + container.items  + "\n");
             }
             LOGGER.info("exported to da txt");
 
