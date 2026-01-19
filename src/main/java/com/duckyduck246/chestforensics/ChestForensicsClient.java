@@ -10,6 +10,7 @@ import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.item.ItemStack;
 
@@ -43,6 +44,11 @@ public class ChestForensicsClient implements ClientModInitializer {
                     MinecraftClient client = MinecraftClient.getInstance();
                     containerName = screen.getTitle().getString();
                     containerID = handledScreen.getScreenHandler().syncId;
+                    ScreenHandler handler = handledScreen.getScreenHandler();
+                    if (!(handler instanceof GenericContainerScreenHandler)) {
+                        return;
+                    }
+
                     id = "ERROR 1389843204";
                     LOGGER.info("id set");
                     LOGGER.info("" + Objects.requireNonNull(detectedPos));
@@ -64,6 +70,7 @@ public class ChestForensicsClient implements ClientModInitializer {
                     LOGGER.info("got after geting id");
                     for (int j = 0; j < allContainers.size(); j++){
                         if(allContainers.get(j).id.equals(id)){
+                            LOGGER.info("new stack:" + ContainerInfo.listItems(1));
                             compare = ContainerInfo.compareItems(allContainers.get(j).items, ContainerInfo.listItems(1));
                         }
                     }
