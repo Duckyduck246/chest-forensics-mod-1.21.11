@@ -144,6 +144,7 @@ public class ContainerInfo {
     }
 
     public static ArrayList<ItemStack> compareItems(ArrayList<ItemStack> oldStack, ArrayList<ItemStack> currentStack){
+        ChestForensicsClient.LOGGER.info("compareItems method called");
         if(oldStack.size() == currentStack.size()){
             ArrayList<ItemStack> diff = new  ArrayList<ItemStack>();
             for(int i = 0; i < oldStack.size(); i++){
@@ -154,7 +155,7 @@ public class ContainerInfo {
                 if(!((ItemStack.areItemsAndComponentsEqual(stackA, stackB)) && (countA == countB))){
                     if(ItemStack.areItemsAndComponentsEqual(stackA, stackB)) {
                         ChestForensicsClient.LOGGER.info(stackA.getComponents().toString());
-                        ItemStack itemStack= stackA;
+                        ItemStack itemStack = stackA;
                         itemStack.setCount(stackB.getCount() - stackA.getCount());
                         diff.add(itemStack);
                     }

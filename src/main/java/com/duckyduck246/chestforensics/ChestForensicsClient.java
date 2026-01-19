@@ -44,6 +44,8 @@ public class ChestForensicsClient implements ClientModInitializer {
                     containerName = screen.getTitle().getString();
                     containerID = handledScreen.getScreenHandler().syncId;
                     id = "ERROR 1389843204";
+                    LOGGER.info("id set");
+                    LOGGER.info("" + Objects.requireNonNull(detectedPos));
                     if (Objects.equals(containerName, "Large Chest")) {
                         LOGGER.info("is a large chest");
                         BlockPos mainContainer;
@@ -59,12 +61,13 @@ public class ChestForensicsClient implements ClientModInitializer {
                     else {
                         id = ContainerInfo.getID(containerName, detectedPos);
                     }
+                    LOGGER.info("got after geting id");
                     for (int j = 0; j < allContainers.size(); j++){
                         if(allContainers.get(j).id.equals(id)){
-                            compare = ContainerInfo.compareItems(allContainers.get(j).items, Objects.requireNonNull(ContainerInfo.listItems(1)));
+                            compare = ContainerInfo.compareItems(allContainers.get(j).items, ContainerInfo.listItems(1));
                         }
                     }
-                    for (int o = 0; o < Objects.requireNonNull(compare).size(); o++){
+                    for (int o = 0; o < compare.size(); o++){
                         LOGGER.info("Compared: " + compare.get(o).toString());
                     }
 
