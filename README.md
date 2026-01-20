@@ -7,8 +7,9 @@ uhhh heres a bird
 bye
 ‎ 
 
-**GOALS:** 
-Finish before 26.1 update? In March?  
+**GOALS:**   
+Finish before 26.1 update?  
+In March?  
 Do the todo?  
 Publish sometime?? ‎   
 ‎ 
