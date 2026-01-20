@@ -75,7 +75,7 @@ public abstract class ContainerDetectionMixin{
                             newText = text.copy().formatted(Formatting.GRAY);
                         }
                         
-                        Text containerText = Text.literal("Container ").formatted(Formatting.GREY);
+                        Text containerText = Text.literal("Container ").formatted(Formatting.GRAY);
                         if(compare1.get(o).name.equals("Chest")){
                            containerText = Text.literal("Chest ").formatted(Formatting.GOLD);
                         }
@@ -86,7 +86,7 @@ public abstract class ContainerDetectionMixin{
                             containerText = containerText.copy().styled(style -> style.withHoverEvent(new HoverEvent.ShowText(Text.literal("Position: " + detectedPos + " Name: " + ChestForensicsClient.containerName))));
                         }
                         Text changesText = Text.literal("Detected Changes: ");
-                        newText = Text.empty().append(containerText.copy()).append(changesText.copy()).append(newText.copy()));
+                        newText = Text.empty().append(containerText.copy()).append(changesText.copy()).append(newText.copy());
                         client.player.sendMessage(newText, false);
                         
                     }
