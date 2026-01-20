@@ -10,6 +10,8 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import net.minecraft.block.ChestBlock;
@@ -55,10 +57,13 @@ public abstract class ContainerDetectionMixin{
                 }
                 ArrayList<PuedoItem> compare1 = ChestForensicsClient.getCompare();
                 for (int o = 0; o < compare1.size(); o++) {
-                    ChestForensicsClient.LOGGER.info("Compared: " + compare1.get(o).getString());
-                    //if(compare1.get(o).){
-
-                    //}
+                    String string = compare1.get(o).count + "x " + compare1.get(o).name;
+                    ChestForensicsClient.LOGGER.info("Compared: " + string);
+                    if(!compare1.get(o).isEmpty()){
+                        int finalO = o;
+                        Text text = Text.literal(string).styled(style -> style.withHoverEvent(new HoverEvent.ShowText(Text.literal(compare1.get(finalO).itemComponents))));
+                        client.player.sendMessage(text, false);
+                    }
                 }
             }
         }
