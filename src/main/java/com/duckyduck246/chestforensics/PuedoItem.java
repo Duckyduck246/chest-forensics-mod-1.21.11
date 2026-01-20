@@ -41,4 +41,10 @@ public class PuedoItem {
     public String getString(){
         return count + "x " + name +  "            " + itemComponents.toString();
     }
+    public Boolean isEmpty(){
+        if(itemComponents == null || name.equals("Air")){
+            return true;
+        }
+        return false;
+    }
 }

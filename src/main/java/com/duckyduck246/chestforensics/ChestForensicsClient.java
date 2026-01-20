@@ -254,16 +254,6 @@ public class ChestForensicsClient implements ClientModInitializer {
         }
     }
 
-    public static boolean returnFromContainer(){
-        MinecraftClient client = MinecraftClient.getInstance();
-        net.minecraft.text.Text screenTitle = client.currentScreen.getTitle();
-        String internalKey = "";
-        if (screenTitle.getContent() instanceof net.minecraft.text.TranslatableTextContent translatable) {
-            internalKey = translatable.getKey();
-        }
-        return true;
-    }
-
     public static BlockPos getMainContainer(BlockEntity blockEntity){
         LOGGER.info("getMainContainer method called");
         if (!(blockEntity instanceof ChestBlockEntity chest)){

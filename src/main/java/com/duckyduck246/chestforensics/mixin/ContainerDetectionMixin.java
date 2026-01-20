@@ -56,6 +56,9 @@ public abstract class ContainerDetectionMixin{
                 ArrayList<PuedoItem> compare1 = ChestForensicsClient.getCompare();
                 for (int o = 0; o < compare1.size(); o++) {
                     ChestForensicsClient.LOGGER.info("Compared: " + compare1.get(o).getString());
+                    //if(compare1.get(o).){
+
+                    //}
                 }
             }
         }
