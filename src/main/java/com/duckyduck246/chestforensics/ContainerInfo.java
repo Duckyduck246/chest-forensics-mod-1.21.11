@@ -200,10 +200,10 @@ public class ContainerInfo {
     }
 
     public static String getID(String t, BlockPos p, BlockPos o){
-        return "containerId:" + t + p.toString() + o.toString();
+        return "containerId:" + t + p.toString();
     }
 
     public static String getID(String t, BlockPos p, Direction d, BlockPos o){
-        return "containerId:" + t + p.toString() + d.toString() + o.toString();
+        return "containerId:" + t + p.toString() + d.toString();
     }
 }

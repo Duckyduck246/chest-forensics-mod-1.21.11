@@ -63,6 +63,10 @@ public abstract class ContainerDetectionMixin{
                     if(!compare1.get(o).isEmpty()){
                         int finalO = o;
 
+                        if(compare1.get(o).count > 0){
+                            string = "+" + string;
+                        }
+                        
                         Text text = Text.literal(string).styled(style -> style.withHoverEvent(new HoverEvent.ShowText(Text.literal(compare1.get(finalO).itemComponents))));
                         Text newText;
                         if(compare1.get(o).count < 0){
@@ -75,12 +79,17 @@ public abstract class ContainerDetectionMixin{
                             newText = text.copy().formatted(Formatting.GRAY);
                         }
                         
+                        ChestForensicsClient.LOGGER.info(compare1.get(o).name);
+                        
                         Text containerText = Text.literal("Container ").formatted(Formatting.GRAY);
-                        if(compare1.get(o).name.equals("Chest")){
+                        if(ChestForensicsClient.containerName.equals("Chest")){
                            containerText = Text.literal("Chest ").formatted(Formatting.GOLD);
                         }
-                        if(compare1.get(o).name.equals("Barrel")){
+                        if(ChestForensicsClient.containerName.equals("Barrel")){
                            containerText = Text.literal("Barrel ").formatted(Formatting.YELLOW);
+                        }
+                        if(ChestForensicsClient.containerName.equals("Large Chest")){
+                           containerText = Text.literal("Large Chest ").formatted(Formatting.GOLD);
                         }
                         if(!(detectedPos == null)){
                             containerText = containerText.copy().styled(style -> style.withHoverEvent(new HoverEvent.ShowText(Text.literal("Position: " + detectedPos + " Name: " + ChestForensicsClient.containerName))));

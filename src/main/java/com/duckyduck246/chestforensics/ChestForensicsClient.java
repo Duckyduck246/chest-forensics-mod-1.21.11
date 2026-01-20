@@ -224,6 +224,7 @@ public class ChestForensicsClient implements ClientModInitializer {
                     compared = ContainerInfo.compareItems(allContainers.get(j).items, ContainerInfo.listItems(2));
                 }
             }
+            LOGGER.info("returned compared: " + compared);
             return compared;
         }
         return compared;
