@@ -13,7 +13,6 @@ Do the todo?
 Publish sometime?? ‎   
 ‎ 
 
- - [ ] List item
 
  
 
