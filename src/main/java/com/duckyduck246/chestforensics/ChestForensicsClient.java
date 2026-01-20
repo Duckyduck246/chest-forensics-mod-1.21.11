@@ -55,6 +55,7 @@ public class ChestForensicsClient implements ClientModInitializer {
     public void onInitializeClient(){
         LOGGER.info("Client Initialized");
         ScreenEvents.AFTER_INIT.register((minecraftClient, screen, i, i1) -> {
+                containerName = screen.getTitle().getString();
                 if (screen instanceof HandledScreen<?> handledScreen){
                     if (!(minecraftClient.crosshairTarget instanceof BlockHitResult blockHit)) {
                         LOGGER.info("may be opening an entity");
