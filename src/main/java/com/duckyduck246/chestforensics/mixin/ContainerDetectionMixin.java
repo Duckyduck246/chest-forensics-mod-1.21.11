@@ -12,6 +12,7 @@ import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import net.minecraft.block.ChestBlock;
@@ -61,8 +62,23 @@ public abstract class ContainerDetectionMixin{
                     ChestForensicsClient.LOGGER.info("Compared: " + string);
                     if(!compare1.get(o).isEmpty()){
                         int finalO = o;
+
                         Text text = Text.literal(string).styled(style -> style.withHoverEvent(new HoverEvent.ShowText(Text.literal(compare1.get(finalO).itemComponents))));
-                        client.player.sendMessage(text, false);
+                        Text newText;
+                        if(compare1.get(o).count < 0){
+                            newText = text.copy().formatted(Formatting.RED, Formatting.BOLD);
+                        }
+                        else if(compare1.get(o).count > 0){
+                            newText = text.copy().formatted(Formatting.GREEN);
+                        }
+                        else{
+                            newText = text.copy().formatted(Formatting.GRAY);
+                        }
+                        Text containerText = Text.literal("Container");
+                        containerText = containerText.copy().styled(style -> style.withHoverEvent(new HoverEvent.ShowText(Text.literal(compare1.get(finalO).itemComponents))));
+                        Text tempText = Text.literal("Detected Changes: ");
+                        newText = containerText.copy().append(tempText.copy().append(newText.copy()));
+                        client.player.sendMessage(newText, false);
                     }
                 }
             }
