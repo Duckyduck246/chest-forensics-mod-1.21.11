@@ -40,7 +40,7 @@ import java.util.Objects;
 public class ChestForensicsClient implements ClientModInitializer {
     public static final String MOD_ID = "chat-logger";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    static String containerName = "not yet";
+    public static String containerName = "not yet";
     int containerID = 0;
     public static BlockPos detectedPos;
     public static Direction facing;
