@@ -22,6 +22,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.duckyduck246.chestforensics.ChestForensicsClient.detectedPos;
+
 @Mixin(ScreenHandler.class)
 public abstract class ContainerDetectionMixin{
 
@@ -46,6 +48,10 @@ public abstract class ContainerDetectionMixin{
                     if (!stack.isEmpty()) {
                         ChestForensicsClient.LOGGER.info("Slot " + i + ": " + stack.getName().getString() + " x" + stack.getCount());
                     }
+                }
+                if(detectedPos == null){
+                    ChestForensicsClient.LOGGER.info("DETECTED POS IS NULL");
+                    return;
                 }
                 ArrayList<PuedoItem> compare1 = ChestForensicsClient.getCompare();
                 for (int o = 0; o < compare1.size(); o++) {

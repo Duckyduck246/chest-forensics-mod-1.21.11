@@ -21,6 +21,7 @@ public class ContainerInteractMixin {
             BlockHitResult hitResult,
             CallbackInfoReturnable<ActionResult> cir
     ) {
+        ChestForensicsClient.detectedPos = null;
         ChestForensicsClient.detectedPos = hitResult.getBlockPos();
     }
 }

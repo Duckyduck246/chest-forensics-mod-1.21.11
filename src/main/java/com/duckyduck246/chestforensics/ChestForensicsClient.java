@@ -15,7 +15,10 @@ import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.vehicle.VehicleInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.item.ItemStack;
@@ -52,17 +55,48 @@ public class ChestForensicsClient implements ClientModInitializer {
     public void onInitializeClient(){
         LOGGER.info("Client Initialized");
         ScreenEvents.AFTER_INIT.register((minecraftClient, screen, i, i1) -> {
-            LOGGER.info("~~~CHEST OPENNENEND~~~");
                 if (screen instanceof HandledScreen<?> handledScreen){
+                    if (!(minecraftClient.crosshairTarget instanceof BlockHitResult blockHit)) {
+                        LOGGER.info("may be opening an entity");
+                        return;
+                    }
+
+                    LOGGER.info("DETECTED POS: " + detectedPos);
+                    if(detectedPos == null){
+                        LOGGER.info("DETECTED POS IS NULL");
+                        return;
+                    }
+
+                    LOGGER.info("~~~CHEST OPENNENEND~~~");
                     MinecraftClient client = MinecraftClient.getInstance();
                     containerName = screen.getTitle().getString();
                     containerID = handledScreen.getScreenHandler().syncId;
                     ScreenHandler handler = handledScreen.getScreenHandler();
-                    
+
+
                     if (!(handler instanceof GenericContainerScreenHandler)) {
                         LOGGER.info("(handler instanceof GenericContainerScreenHandler)");
                         return;
                     }
+
+                    GenericContainerScreenHandler g = (GenericContainerScreenHandler) handler;
+
+                    if (g.getInventory() instanceof VehicleInventory) {
+                        LOGGER.info("Detected vehicle inventory (Chest Boat/Minecart)");
+                        return;
+                    }
+
+                    if (g.getInventory() instanceof Entity) {
+                        LOGGER.info("may be opening an entity2");
+                        return;
+                    }
+
+                    net.minecraft.text.Text screenTitley = client.currentScreen.getTitle();
+                    String keyThing = "";
+                    if (screenTitley.getContent() instanceof net.minecraft.text.TranslatableTextContent translatable) {
+                        keyThing = translatable.getKey();
+                    }
+                    LOGGER.info("title: " + keyThing);
 
                     ScreenEvents.remove(screen).register(closedScreen -> {
                         LOGGER.info("~~~CHEST CLOCLOLOSOSESESED~~~");
@@ -218,6 +252,16 @@ public class ChestForensicsClient implements ClientModInitializer {
         catch (IOException e){
             LOGGER.info("broke; not exported to da txt");
         }
+    }
+
+    public static boolean returnFromContainer(){
+        MinecraftClient client = MinecraftClient.getInstance();
+        net.minecraft.text.Text screenTitle = client.currentScreen.getTitle();
+        String internalKey = "";
+        if (screenTitle.getContent() instanceof net.minecraft.text.TranslatableTextContent translatable) {
+            internalKey = translatable.getKey();
+        }
+        return true;
     }
 
     public static BlockPos getMainContainer(BlockEntity blockEntity){
