@@ -76,7 +76,7 @@ public abstract class ContainerDetectionMixin{
                         }
                         Text containerText = Text.literal("Container ");
                         if(!(detectedPos == null)){
-                            containerText = containerText.copy().styled(style -> style.withHoverEvent(new HoverEvent.ShowText(Text.literal("Position: " + detectedPos + "Name: " + ChestForensicsClient.containerName))));
+                            containerText = containerText.copy().styled(style -> style.withHoverEvent(new HoverEvent.ShowText(Text.literal("Position: " + detectedPos + " Name: " + ChestForensicsClient.containerName))));
                         }
                         newText = containerText.copy().append(Text.literal("Detected Changes: ").append(newText.copy()));
                         client.player.sendMessage(newText, false);
