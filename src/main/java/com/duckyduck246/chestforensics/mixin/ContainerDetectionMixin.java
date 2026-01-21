@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -68,7 +69,9 @@ public abstract class ContainerDetectionMixin{
                             string = "+" + string;
                         }
                         
-                        Text text = Text.literal(string).styled(style -> style.withHoverEvent(new HoverEvent.ShowText(Text.literal(compare1.get(finalO).itemComponents))));
+                        Text text = Text.literal(string);
+                        Text hoverText = Text.literal(compare1.get(finalO).itemComponents);
+
                         Text newText;
                         if(compare1.get(o).count < 0){
                             newText = text.copy().formatted(Formatting.RED, Formatting.BOLD);
@@ -79,9 +82,10 @@ public abstract class ContainerDetectionMixin{
                         else{
                             newText = text.copy().formatted(Formatting.GRAY);
                         }
-                        
+                        newText = newText.copy().styled(style -> style.withClickEvent(new ClickEvent.CopyToClipboard(hoverText.toString())).withHoverEvent(new HoverEvent.ShowText(Text.literal("Click to copy full NBT data to clipboard"))));
+
                         ChestForensicsClient.LOGGER.info(compare1.get(o).name);
-                        
+
                         Text containerText = Text.literal("Container ").formatted(Formatting.GRAY);
                         if(ChestForensicsClient.containerName.equals("Chest")){
                            containerText = Text.literal("Chest ").formatted(Formatting.GOLD);
@@ -97,8 +101,8 @@ public abstract class ContainerDetectionMixin{
                         }
                         Text changesText = Text.literal("Detected Changes: ");
                         newText = Text.empty().append(containerText.copy()).append(changesText.copy()).append(newText.copy());
+
                         client.player.sendMessage(newText, false);
-                        
                     }
                 }
             }
