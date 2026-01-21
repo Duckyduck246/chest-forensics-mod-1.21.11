@@ -36,13 +36,13 @@ Publish sometime?? ‎
 -  [ ] Make config menu???? Or operate entirely with chat text buttons since im lazy??
 -  [ ] Detect missing chests and stuff + chat alerts if that happends?
 -  [ ] Make mod art and publish maybe??? if i feel like it???
--  [ ] Large history TXT export type thing with all containers and thier histories organized through file folders and TXT files and maybe JSON files?
+-  [x] Large history TXT export type thing with all containers and thier histories organized through file folders and TXT files and maybe JSON files?
   
   
 **More optional stuff:**
 -  [ ] Make aditional textures for barrels and other containers
 -  [ ] Add entity container support using thier UUID
--  [ ] Furnace, brewing stand, and non support
+-  [ ] Furnace, brewing stand, and other container support
 -  [ ] Hotkeys?
 -  [ ] Connect tags to properties
 -  [ ] Splash text easter eggs!!!
