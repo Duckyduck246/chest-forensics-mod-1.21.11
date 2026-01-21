@@ -243,9 +243,10 @@ public class ChestForensicsClient implements ClientModInitializer {
         Path configDir = FabricLoader.getInstance().getConfigDir().resolve("chest-forensics");
         File file = configDir.resolve("chest_forensices_data.txt").toFile();
         file.getParentFile().mkdirs();
-        try(FileWriter writer = new FileWriter(file, false)){
+        try(FileWriter writer = new FileWriter(file, true)){
             writer.write("Chest Forensics Export\n");
-            writer.write("Last updated: " + java.time.LocalDateTime.now() + "\n\n");
+            writer.write("World: " + getWorldId() + "\n");
+            writer.write("Updated: " + java.time.LocalDateTime.now() + "\n\n");
             for(ContainerInfo container : allContainers){
                 writer.write("Container Type: " + container.type  + "\n");
                 writer.write("Pos: " + container.pos  + "\n");
@@ -374,6 +375,14 @@ public class ChestForensicsClient implements ClientModInitializer {
         return blockEntity.getPos();
     }
 
-
+    public static String getWorldId() {
+        MinecraftClient client = MinecraftClient.getInstance();
+        if (client.isInSingleplayer()) {
+            return client.getServer().getSaveProperties().getLevelName();
+        } else if (client.getCurrentServerEntry() != null) {
+            return client.getCurrentServerEntry().address.replace(":", "_").replace("/", "_");
+        }
+        return "idk_either_man";
+    }
 
 }
