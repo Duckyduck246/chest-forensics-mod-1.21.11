@@ -42,7 +42,7 @@ Publish sometime?? ‎
 **More optional stuff:**
 -  [ ] Make aditional textures for barrels and other containers
 -  [ ] Add entity container support using thier UUID
--  [ ] Furnace, brewing stand, and non support
+-  [ ] Furnace, brewing stand, and other container support
 -  [ ] Hotkeys?
 -  [ ] Connect tags to properties
 -  [ ] Splash text easter eggs!!!
