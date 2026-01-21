@@ -230,7 +230,7 @@ public class ChestForensicsClient implements ClientModInitializer {
             for (int j = 0; j < allContainers.size(); j++) {
                 if (allContainers.get(j).id.equals(id)) {
                     LOGGER.info("new stack:" + ContainerInfo.listItems(2));
-                    compared = ContainerInfo.compareItems(allContainers.get(j).items, ContainerInfo.listItems(2));
+                    compared = ContainerInfo.compareItems(ForensicsNbt.fromJsonString(allContainers.get(j).items), ContainerInfo.listItems(2));
                 }
             }
             LOGGER.info("returned compared: " + compared);
@@ -252,8 +252,8 @@ public class ChestForensicsClient implements ClientModInitializer {
                 writer.write("Pos: " + container.pos  + "\n");
                 writer.write("ID: " + container.id  + "\n");
                 writer.write("Items: ");
-                for(ItemStack item : container.items){
-                    writer.write("(" + item.getComponents() + ") ");
+                for(String item : container.items){
+                    writer.write("(" + item + ") ");
                 }
                 writer.write("\n\n");
             }

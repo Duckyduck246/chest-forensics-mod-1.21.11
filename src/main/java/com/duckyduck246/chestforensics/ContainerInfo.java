@@ -3,6 +3,8 @@ package com.duckyduck246.chestforensics;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.StringNbtReader;
 
 import com.duckyduck246.chestforensics.ChestForensicsClient;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
@@ -53,7 +55,7 @@ public class ContainerInfo {
     public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d, Identifier b){
         type = t;
         pos = p;
-        items = toNbtString(i);
+        items = ForensicsNbt.toJsonString(i);
         tags = a;
         dir = d;
         dimension = b;
@@ -65,7 +67,7 @@ public class ContainerInfo {
     public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Identifier b){
         type = t;
         pos = p;
-        items = toNbtString(i);
+        items = ForensicsNbt.toJsonString(i);
         tags = a;
         dimension = b;
         id = "containerId:" + type + pos.toString() + dimension.toString();
@@ -76,7 +78,7 @@ public class ContainerInfo {
     public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d, BlockPos o, Identifier b){
         type = t;
         pos = p;
-        items = toNbtString(i);
+        items = ForensicsNbt.toJsonString(i);
         tags = a;
         dir = d;
         otherPos = o;
@@ -89,7 +91,7 @@ public class ContainerInfo {
     public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, BlockPos o, Identifier b){
         type = t;
         pos = p;
-        items = toNbtString(i);
+        items = ForensicsNbt.toJsonString(i);
         tags = a;
         otherPos = o;
         dimension = b;
@@ -220,19 +222,6 @@ public class ContainerInfo {
         return "containerId:" + t + p.toString() + d.toString() + o.toString() + b.toString();
     }
     
-    public static ArrayList<String> toNbtString(ArrayList<ItemStack> stacks) {
-        ArrayList<String> returned = new ArrayList<>();
-        for(ItemStack stack : stacks){
-            DataResult<NbtCompound> compoundResult = ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, stack)
-                    .flatMap(nbt -> {
-                        if (nbt instanceof NbtCompound compound) {
-                            return DataResult.success(compound);
-                        }
-                        return DataResult.error(() -> "Serialized NBT was not a compound");
-                    });
-        }
-        return returned;
-    }
     public static Identifier getDimension(){
         MinecraftClient client = MinecraftClient.getInstance();
         World world = client.world;
