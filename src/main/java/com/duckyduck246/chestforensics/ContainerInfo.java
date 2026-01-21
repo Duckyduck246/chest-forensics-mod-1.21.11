@@ -1,5 +1,7 @@
 package com.duckyduck246.chestforensics;
 
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import net.fabricmc.api.ClientModInitializer;
 
 import com.duckyduck246.chestforensics.ChestForensicsClient;
@@ -12,7 +14,10 @@ import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -121,7 +126,7 @@ public class ContainerInfo {
                         ChestForensicsClient.LOGGER.info("slots: " + handler.slots.size());
                         for (int a = 0; a < handler.slots.size(); a++) {
                             ItemStack stack = handler.getSlot(a).getStack();
-                            if (!(handler.getSlot(a).inventory instanceof net.minecraft.entity.player.PlayerInventory)) {
+                            if (!(handler.getSlot(a).inventory instanceof PlayerInventory)) {
                                 items.add(stack.copy());
                                 String nameOfItem = stack.getItem().getName().getString();
                                 String dataOfItem = stack.getComponents().toString();
@@ -149,7 +154,7 @@ public class ContainerInfo {
                         ArrayList<ItemStack> items = new ArrayList<ItemStack>();
                         for (int a = 0; a < handler.slots.size(); a++) {
                             ItemStack stack = handler.getSlot(a).getStack();
-                            if (!(handler.getSlot(a).inventory instanceof net.minecraft.entity.player.PlayerInventory)) {
+                            if (!(handler.getSlot(a).inventory instanceof PlayerInventory)) {
                                 items.add(stack.copy());
                                 String nameOfItem = stack.getItem().getName().getString();
                                 String dataOfItem = stack.getComponents().toString();
@@ -218,9 +223,13 @@ public class ContainerInfo {
     public static ArrayList<String> toNbtString(ArrayList<ItemStack> stacks) {
         ArrayList<String> returned = new ArrayList<>();
         for(ItemStack stack : stacks){
-            NbtCompound nbt = new NbtCompound();
-            stack.writeNbt(nbt);
-            returned.add(nbt.asString());
+            DataResult<NbtCompound> compoundResult = ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, stack)
+                    .flatMap(nbt -> {
+                        if (nbt instanceof NbtCompound compound) {
+                            return DataResult.success(compound);
+                        }
+                        return DataResult.error(() -> "Serialized NBT was not a compound");
+                    });
         }
         return returned;
     }
