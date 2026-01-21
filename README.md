@@ -36,7 +36,7 @@ Publish sometime?? ‎
 -  [ ] Make config menu???? Or operate entirely with chat text buttons since im lazy??
 -  [ ] Detect missing chests and stuff + chat alerts if that happends?
 -  [ ] Make mod art and publish maybe??? if i feel like it???
--  [ ] Large history TXT export type thing with all containers and thier histories organized through file folders and TXT files and maybe JSON files?
+-  [x] Large history TXT export type thing with all containers and thier histories organized through file folders and TXT files and maybe JSON files?
   
   
 **More optional stuff:**
