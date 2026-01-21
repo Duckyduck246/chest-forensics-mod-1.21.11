@@ -15,6 +15,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.Item;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -33,7 +34,7 @@ public class ContainerInfo {
     
     public String type;
     public BlockPos pos;
-    public ArrayList<ItemStack> items;
+    public ArrayList<String> items;
     public ArrayList<String> tags;
     public Direction dir;
     public String id;
@@ -47,7 +48,7 @@ public class ContainerInfo {
     public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d, Identifier b){
         type = t;
         pos = p;
-        items = i;
+        items = toNbtString(i);
         tags = a;
         dir = d;
         dimension = b;
@@ -59,7 +60,7 @@ public class ContainerInfo {
     public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Identifier b){
         type = t;
         pos = p;
-        items = i;
+        items = toNbtString(i);
         tags = a;
         dimension = b;
         id = "containerId:" + type + pos.toString() + dimension.toString();
@@ -70,7 +71,7 @@ public class ContainerInfo {
     public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d, BlockPos o, Identifier b){
         type = t;
         pos = p;
-        items = i;
+        items = toNbtString(i);
         tags = a;
         dir = d;
         otherPos = o;
@@ -83,7 +84,7 @@ public class ContainerInfo {
     public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, BlockPos o, Identifier b){
         type = t;
         pos = p;
-        items = i;
+        items = toNbtString(i);
         tags = a;
         otherPos = o;
         dimension = b;
@@ -107,7 +108,6 @@ public class ContainerInfo {
     
     public void logTotal(){
         ChestForensicsClient.LOGGER.info("" + total);
-        ChestForensicsClient.LOGGER.info("" + total); //remove latterer
     }
 
     public static ArrayList<ItemStack> listItems(int mode){
@@ -214,7 +214,16 @@ public class ContainerInfo {
     public static String getID(String t, BlockPos p, Direction d, BlockPos o, Identifier b){
         return "containerId:" + t + p.toString() + d.toString() + o.toString() + b.toString();
     }
-
+    
+    public static ArrayList<String> toNbtString(ArrayList<ItemStack> stacks) {
+        ArrayList<String> returned = new ArrayList<>();
+        for(ItemStack stack : stacks){
+            NbtCompound nbt = new NbtCompound();
+            stack.writeNbt(nbt);
+            returned.add(nbt.asString());
+        }
+        return returned;
+    }
     public static Identifier getDimension(){
         MinecraftClient client = MinecraftClient.getInstance();
         World world = client.world;
