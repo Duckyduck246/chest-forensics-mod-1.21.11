@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.item.ItemStack;
 
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -39,47 +40,54 @@ public class ContainerInfo {
     public static int total = 0;
     public boolean doubleChest;
     public BlockPos otherPos;
-    
-    public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d){
+    public Identifier dimension;
+
+
+
+    public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d, Identifier b){
         type = t;
         pos = p;
         items = i;
         tags = a;
         dir = d;
-        id = "containerId:" + type + pos.toString() + dir.toString();
+        dimension = b;
+        id = "containerId:" + type + pos.toString() + dir.toString() + dimension.toString();
         doubleChest = false;
         total++;
     }
 
-    public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a){
+    public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Identifier b){
         type = t;
         pos = p;
         items = i;
         tags = a;
-        id = "containerId:" + type + pos.toString();
+        dimension = b;
+        id = "containerId:" + type + pos.toString() + dimension.toString();
         doubleChest = false;
         total++;
     }
     
-    public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d, BlockPos o){
+    public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d, BlockPos o, Identifier b){
         type = t;
         pos = p;
         items = i;
         tags = a;
         dir = d;
         otherPos = o;
-        id = "containerId:" + type + pos.toString() + dir.toString() + otherPos.toString();
+        dimension = b;
+        id = "containerId:" + type + pos.toString() + dir.toString() + otherPos.toString() + dimension.toString();
         doubleChest = true;
         total++;
     }
 
-    public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, BlockPos o){
+    public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, BlockPos o, Identifier b){
         type = t;
         pos = p;
         items = i;
         tags = a;
         otherPos = o;
-        id = "containerId:" + type + pos.toString() + otherPos.toString();
+        dimension = b;
+        id = "containerId:" + type + pos.toString() + otherPos.toString() + dimension.toString();
         doubleChest = true;
         total++;
     }
@@ -191,19 +199,30 @@ public class ContainerInfo {
         return diff;
     }
 
-    public static String getID(String t, BlockPos p, Direction d){
-        return "containerId:" + t + p.toString() + d.toString();
+    public static String getID(String t, BlockPos p, Direction d, Identifier b){
+        return "containerId:" + t + p.toString() + d.toString() + b.toString();
     }
 
-    public static String getID(String t, BlockPos p){
-        return "containerId:" + t + p.toString();
+    public static String getID(String t, BlockPos p, Identifier b){
+        return "containerId:" + t + p.toString() + b.toString();
     }
 
-    public static String getID(String t, BlockPos p, BlockPos o){
-        return "containerId:" + t + p.toString();
+    public static String getID(String t, BlockPos p, BlockPos o, Identifier b){
+        return "containerId:" + t + p.toString() + o.toString() + b.toString();
     }
 
-    public static String getID(String t, BlockPos p, Direction d, BlockPos o){
-        return "containerId:" + t + p.toString() + d.toString();
+    public static String getID(String t, BlockPos p, Direction d, BlockPos o, Identifier b){
+        return "containerId:" + t + p.toString() + d.toString() + o.toString() + b.toString();
+    }
+
+    public static Identifier getDimension(){
+        MinecraftClient client = MinecraftClient.getInstance();
+        World world = client.world;
+        if(world != null){
+            Identifier dimensionId = world.getRegistryKey().getValue();
+            ChestForensicsClient.LOGGER.info("dimension: " + dimensionId);
+            return dimensionId;
+        }
+        return null;
     }
 }

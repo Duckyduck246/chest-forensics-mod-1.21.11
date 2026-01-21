@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.duckyduck246.chestforensics.ChestForensicsClient.detectedPos;
+import static com.duckyduck246.chestforensics.ChestForensicsClient.dimension;
 
 @Mixin(ScreenHandler.class)
 public abstract class ContainerDetectionMixin{
@@ -92,7 +93,7 @@ public abstract class ContainerDetectionMixin{
                            containerText = Text.literal("Large Chest ").formatted(Formatting.GOLD);
                         }
                         if(!(detectedPos == null)){
-                            containerText = containerText.copy().styled(style -> style.withHoverEvent(new HoverEvent.ShowText(Text.literal("Position: " + detectedPos + " Name: " + ChestForensicsClient.containerName))));
+                            containerText = containerText.copy().styled(style -> style.withHoverEvent(new HoverEvent.ShowText(Text.literal("Position: " + detectedPos + " Dimension: " + dimension + " Name: " + ChestForensicsClient.containerName))));
                         }
                         Text changesText = Text.literal("Detected Changes: ");
                         newText = Text.empty().append(containerText.copy()).append(changesText.copy()).append(newText.copy());

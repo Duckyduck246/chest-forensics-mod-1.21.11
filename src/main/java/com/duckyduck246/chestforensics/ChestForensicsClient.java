@@ -25,6 +25,7 @@ import net.minecraft.item.ItemStack;
 
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -49,7 +50,7 @@ public class ChestForensicsClient implements ClientModInitializer {
     public static ArrayList<PuedoItem> compare = new ArrayList<>();
     boolean allAir;
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
+    public static Identifier dimension;
 
     @Override
     public void onInitializeClient(){
@@ -98,6 +99,8 @@ public class ChestForensicsClient implements ClientModInitializer {
                         keyThing = translatable.getKey();
                     }
                     LOGGER.info("title: " + keyThing);
+                    dimension = ContainerInfo.getDimension();
+                    LOGGER.info("dimension set: " + dimension);
 
                     ScreenEvents.remove(screen).register(closedScreen -> {
                         LOGGER.info("~~~CHEST CLOCLOLOSOSESESED~~~");
@@ -107,20 +110,23 @@ public class ChestForensicsClient implements ClientModInitializer {
                         if (Objects.equals(containerName, "Large Chest")) {
                             LOGGER.info("is a large chest");
                             BlockPos mainContainer;
+                            BlockPos subContainer;
                             if (client.world != null) {
                                 mainContainer = getMainContainer(client.world.getBlockEntity(detectedPos));
+                                subContainer = getSubContainer(client.world.getBlockEntity(detectedPos));
+
                                 LOGGER.info("Pos" + mainContainer);
 
-                                addContainerInfo(containerName, mainContainer, ContainerInfo.listItems(2), new ArrayList<String>());;
+                                addContainerInfo(containerName, mainContainer, ContainerInfo.listItems(2), new ArrayList<String>(), subContainer, dimension);
                             }
                             else{
                                 LOGGER.info("ERROR: WORLD NOT INSTANTIATED");
-                                addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(2), new ArrayList<String>());
+                                addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(2), new ArrayList<String>(), dimension);
                             }
                         }
                         else {
                             LOGGER.info("Pos" + detectedPos);
-                            addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(2), new ArrayList<String>());
+                            addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(2), new ArrayList<String>(), dimension);
                         }
                         saveContainersToTXT();
 
@@ -151,48 +157,48 @@ public class ChestForensicsClient implements ClientModInitializer {
         }
     }
 
-    public void addContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d, BlockPos o){
-        String id = ContainerInfo.getID(t, p, d);
+    public void addContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d, BlockPos o, Identifier b){
+        String id = ContainerInfo.getID(t, p, d, o, b);
         for (int j = 0; j < allContainers.size(); j++){
             if(allContainers.get(j).id.equals(id)){
-                allContainers.set(j, new ContainerInfo(t, p, i, a, o));
+                allContainers.set(j, new ContainerInfo(t, p, i, a, o, b));
                 return;
             }
         }
-        allContainers.add(new ContainerInfo(t, p, i, a, o));
+        allContainers.add(new ContainerInfo(t, p, i, a, o, b));
     }
 
-    public void addContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d){
-        String id = ContainerInfo.getID(t, p, d);
+    public void addContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Direction d, Identifier b){
+        String id = ContainerInfo.getID(t, p, d, b);
         for (int j = 0; j < allContainers.size(); j++){
             if(allContainers.get(j).id.equals(id)){
-                allContainers.set(j, new ContainerInfo(t, p, i, a));
+                allContainers.set(j, new ContainerInfo(t, p, i, a, b));
                 return;
             }
         }
-        allContainers.add(new ContainerInfo(t, p, i, a));
+        allContainers.add(new ContainerInfo(t, p, i, a, b));
     }
 
-    public void addContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, BlockPos o){
-        String id = ContainerInfo.getID(t, p);
+    public void addContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, BlockPos o, Identifier b){
+        String id = ContainerInfo.getID(t, p, o, b);
         for (int j = 0; j < allContainers.size(); j++){
             if(allContainers.get(j).id.equals(id)){
-                allContainers.set(j, new ContainerInfo(t, p, i, a, o));
+                allContainers.set(j, new ContainerInfo(t, p, i, a, o, b));
                 return;
             }
         }
-        allContainers.add(new ContainerInfo(t, p, i, a, o));
+        allContainers.add(new ContainerInfo(t, p, i, a, o, b));
     }
 
-    public void addContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a){
-        String id = ContainerInfo.getID(t, p);
+    public void addContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Identifier b){
+        String id = ContainerInfo.getID(t, p, b);
         for (int j = 0; j < allContainers.size(); j++){
             if(allContainers.get(j).id.equals(id)){
-                allContainers.set(j, new ContainerInfo(t, p, i, a));
+                allContainers.set(j, new ContainerInfo(t, p, i, a, b));
                 return;
             }
         }
-        allContainers.add(new ContainerInfo(t, p, i, a));
+        allContainers.add(new ContainerInfo(t, p, i, a, b));
     }
 
     public static ArrayList<PuedoItem> getCompare(){
@@ -208,15 +214,17 @@ public class ChestForensicsClient implements ClientModInitializer {
             if (Objects.equals(containerName, "Large Chest")) {
                 LOGGER.info("is a large chest");
                 BlockPos mainContainer;
+                BlockPos subContainer;
                 if (client.world != null) {
                     mainContainer = getMainContainer(client.world.getBlockEntity(detectedPos));
-                    id = ContainerInfo.getID(containerName, mainContainer, detectedPos);
+                    subContainer = getSubContainer(client.world.getBlockEntity(detectedPos));
+                    id = ContainerInfo.getID(containerName, mainContainer, subContainer, dimension);
                 } else {
                     LOGGER.info("ERROR: WORLD NOT INSTANTIATED");
-                    id = ContainerInfo.getID(containerName, detectedPos);
+                    id = ContainerInfo.getID(containerName, detectedPos, dimension);
                 }
             } else {
-                id = ContainerInfo.getID(containerName, detectedPos);
+                id = ContainerInfo.getID(containerName, detectedPos, dimension);
             }
             LOGGER.info("got after geting id");
             for (int j = 0; j < allContainers.size(); j++) {
@@ -304,6 +312,61 @@ public class ChestForensicsClient implements ClientModInitializer {
                 }
                 else{
                     LOGGER.info("neighbor not a chest?");
+                }
+            }
+        }
+
+        return blockEntity.getPos();
+    }
+
+    public static BlockPos getSubContainer(BlockEntity blockEntity){
+        LOGGER.info("getSubContainer method called");
+        if (!(blockEntity instanceof ChestBlockEntity chest)){
+            LOGGER.info("not a chest...");
+            return blockEntity.getPos();
+        }
+        ChestType type = chest.getCachedState().get(ChestBlock.CHEST_TYPE);
+        if (type == ChestType.SINGLE || type == ChestType.RIGHT){
+            LOGGER.info("single chest or right chest");
+            return chest.getPos();
+        }
+        if (type == ChestType.LEFT){
+            LOGGER.info("finally is a left chest");
+            World world = chest.getWorld();
+            if (world != null){
+                Direction chestFacing = chest.getCachedState().get(ChestBlock.FACING);
+                BlockPos neighbor;
+                LOGGER.info(chestFacing.asString());
+                switch(chestFacing){
+                    case SOUTH:
+                        neighbor = chest.getPos().west();
+                        break;
+                    case NORTH:
+                        neighbor = chest.getPos().east();
+                        break;
+                    case EAST:
+                        neighbor = chest.getPos().south();
+                        break;
+                    case WEST:
+                        neighbor = chest.getPos().north();
+                        break;
+                    default:
+                        neighbor = chest.getPos().up();
+                        break;
+                }
+                BlockEntity neighborEntity = world.getBlockEntity(neighbor);
+                if (neighborEntity instanceof ChestBlockEntity neighborChest){
+                    ChestType neighborType = neighborChest.getCachedState().get(ChestBlock.CHEST_TYPE);
+                    if (neighborType == ChestType.RIGHT){
+                        LOGGER.info("neighbor is a right chest, returning pos");
+                        return neighborChest.getPos();
+                    }
+                    else{
+                        LOGGER.info("neighbor not a right chest? they were: " + neighborType.asString());
+                    }
+                }
+                else{
+                    LOGGER.info("neighbor not a chest??");
                 }
             }
         }
