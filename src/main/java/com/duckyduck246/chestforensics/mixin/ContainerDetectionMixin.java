@@ -70,7 +70,7 @@ public abstract class ContainerDetectionMixin{
                         }
                         
                         Text text = Text.literal(string);
-                        Text hoverText = Text.literal(compare1.get(finalO).itemComponents);
+                        Text nbt = Text.literal(compare1.get(finalO).nbt);
 
                         Text newText;
                         if(compare1.get(o).count < 0){
@@ -82,7 +82,7 @@ public abstract class ContainerDetectionMixin{
                         else{
                             newText = text.copy().formatted(Formatting.GRAY);
                         }
-                        newText = newText.copy().styled(style -> style.withClickEvent(new ClickEvent.CopyToClipboard(hoverText.toString())).withHoverEvent(new HoverEvent.ShowText(Text.literal("Click to copy full NBT data to clipboard"))));
+                        newText = newText.copy().styled(style -> style.withClickEvent(new ClickEvent.CopyToClipboard(nbt.toString())).withHoverEvent(new HoverEvent.ShowText(Text.literal("Click to copy full NBT data to clipboard"))));
 
                         ChestForensicsClient.LOGGER.info(compare1.get(o).name);
 

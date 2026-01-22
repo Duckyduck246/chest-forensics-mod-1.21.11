@@ -189,14 +189,14 @@ public class ContainerInfo {
                 if(!((ItemStack.areItemsAndComponentsEqual(stackA, stackB)) && (countA == countB))) {
                     if (ItemStack.areItemsAndComponentsEqual(stackA, stackB)) {
                         ChestForensicsClient.LOGGER.info("index: " + i);
-                        PuedoItem itemStack = new PuedoItem(stackB.getCount() - stackA.getCount(), stackA.getComponents(), stackA.getName().getString());
+                        PuedoItem itemStack = new PuedoItem(stackB.getCount() - stackA.getCount(), stackA.getComponents(), stackA.getName().getString(), ForensicsNbt.toJsonString(stackA));
                         diff.add(itemStack);
                     } else {
                         ChestForensicsClient.LOGGER.info("index: " + i);
                         ChestForensicsClient.LOGGER.info(stackB.getComponents().toString());
-                        PuedoItem itemStack1 = new PuedoItem(-stackA.getCount(), stackA.getComponents(), stackA.getName().getString());
+                        PuedoItem itemStack1 = new PuedoItem(-stackA.getCount(), stackA.getComponents(), stackA.getName().getString(), ForensicsNbt.toJsonString(stackA));
                         diff.add(itemStack1);
-                        PuedoItem itemStack2 = new PuedoItem(stackB.getCount(), stackB.getComponents(), stackB.getName().getString());
+                        PuedoItem itemStack2 = new PuedoItem(stackB.getCount(), stackB.getComponents(), stackB.getName().getString(), ForensicsNbt.toJsonString(stackB));
                         diff.add(itemStack2);
                     }
                 }

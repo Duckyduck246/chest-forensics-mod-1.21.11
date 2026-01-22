@@ -32,14 +32,16 @@ public class PuedoItem {
     public final int count;
     public final String name;
     public final String itemComponents;
-    public PuedoItem(int c, ComponentMap m, String n){
+    public final String nbt;
+    public PuedoItem(int c, ComponentMap m, String n, String a){
         count = c;
         itemComponents = m.toString();
         name = n;
-        ChestForensicsClient.LOGGER.info("new PuedoItem created: count: " + c + "componets: " + m);
+        nbt = a;
+        ChestForensicsClient.LOGGER.info("new PuedoItem created: count: " + c + "componets: " + m + "nbt: " + a);
     }
     public String getString(){
-        return count + "x " + name +  "            " + itemComponents.toString();
+        return count + "x " + name +  "            " + itemComponents.toString() + "             " + nbt;
     }
     public Boolean isEmpty(){
         if(itemComponents == null || name.equals("Air")){

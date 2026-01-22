@@ -38,4 +38,20 @@ public class ForensicsNbt {
         }
         return returned;
     }
+    
+    public static String toJsonString(ItemStack stack) {
+        DataResult<JsonElement> result = ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, stack);
+        return result.result().map(JsonElement::toString).orElse("{}");
+    }
+
+    public static ItemStack fromJsonString(String stringJson) {
+        try{
+            JsonElement element = JsonParser.parseString(stringJson);
+            DataResult<ItemStack> result = ItemStack.CODEC.parse(JsonOps.INSTANCE, element);
+            return result.result().orElse(ItemStack.EMPTY);
+            
+        } catch(Exception e){}
+        ChestForensicsClient.LOGGER.info("failed to get itemstack from json string");
+        return ItemStack.EMPTY;
+    }
 }
