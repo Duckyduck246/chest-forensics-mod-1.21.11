@@ -264,6 +264,43 @@ public class ChestForensicsClient implements ClientModInitializer {
             LOGGER.info("broke; not exported to da txt");
         }
     }
+    
+    public static void saveContainersToJSON(){
+    
+        Path configDir = FabricLoader.getInstance().getConfigDir().resolve("chest-forensics");
+        Files.createDirectories(configDir);
+        File file = configDir.resolve(getWorldId() + "_allContainers.json").toFile();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String json = gson.toJson(allContainers);
+        Files.writeString(file.toPath(), json);
+        
+        LOGGER.info("saved allContainers to da json named: " + getWorldId() + "_allContainers.json");
+    
+    }
+    
+    public static void loadContainersFromJSON(){
+    
+        Path configDir = FabricLoader.getInstance().getConfigDir().resolve("chest-forensics");
+        Files.createDirectories(configDir);
+        File file = configDir.resolve(getWorldId() + "_allContainers.json").toFile();
+        
+        if(!file.exists){
+            LOGGER.info("no saved container JSON found");
+            return;
+        }
+        
+        String json = Files.readString(file.toPath());
+        ArrayList<ContainerInfo> loadedContainers = GSON.fromJson(json, new TypeToken<ArrayList<ContainerInfo>>() {}.getType());
+        if(!(loadedContainers == null)){
+            allContainers = loadedContainers;
+            LOGGER.info("loaded containers from json");
+        }       
+        else{
+            LOGGER.info("failed to load containers from json");
+        }
+        
+    
+    }
 
     public static BlockPos getMainContainer(BlockEntity blockEntity){
         LOGGER.info("getMainContainer method called");
