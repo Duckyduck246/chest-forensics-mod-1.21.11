@@ -2,11 +2,14 @@ package com.duckyduck246.chestforensics;
 
 import net.fabricmc.api.ClientModInitializer;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Files;
+import com.google.gson.reflect.TypeToken;
 import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.block.ChestBlock;
@@ -26,14 +29,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spongepowered.include.com.google.gson.Gson;
-import org.spongepowered.include.com.google.gson.GsonBuilder;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -55,6 +60,14 @@ public class ChestForensicsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient(){
         LOGGER.info("Client Initialized");
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            LOGGER.info("loading container data");
+            try {
+                loadContainersFromJSON();
+            } catch (IOException e) {
+                LOGGER.error("failure! no load correctly! ", e);
+            }
+        });
         ScreenEvents.AFTER_INIT.register((minecraftClient, screen, i, i1) -> {
                 containerName = screen.getTitle().getString();
                 if (screen instanceof HandledScreen<?> handledScreen){
@@ -240,6 +253,11 @@ public class ChestForensicsClient implements ClientModInitializer {
     }
 
     public static void saveContainersToTXT(){
+        try {
+            saveContainersToJSON();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Path configDir = FabricLoader.getInstance().getConfigDir().resolve("chest-forensics");
         File file = configDir.resolve("chest_forensices_data.txt").toFile();
         file.getParentFile().mkdirs();
@@ -265,7 +283,7 @@ public class ChestForensicsClient implements ClientModInitializer {
         }
     }
     
-    public static void saveContainersToJSON(){
+    public static void saveContainersToJSON() throws IOException {
     
         Path configDir = FabricLoader.getInstance().getConfigDir().resolve("chest-forensics");
         Files.createDirectories(configDir);
@@ -278,13 +296,13 @@ public class ChestForensicsClient implements ClientModInitializer {
     
     }
     
-    public static void loadContainersFromJSON(){
+    public static void loadContainersFromJSON() throws IOException {
     
         Path configDir = FabricLoader.getInstance().getConfigDir().resolve("chest-forensics");
         Files.createDirectories(configDir);
         File file = configDir.resolve(getWorldId() + "_allContainers.json").toFile();
         
-        if(!file.exists){
+        if(!file.exists()){
             LOGGER.info("no saved container JSON found");
             return;
         }
@@ -415,7 +433,7 @@ public class ChestForensicsClient implements ClientModInitializer {
     public static String getWorldId() {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.isInSingleplayer()) {
-            return client.getServer().getSaveProperties().getLevelName();
+            return client.getServer().getSavePath(WorldSavePath.ROOT).getParent().getFileName().toString();
         } else if (client.getCurrentServerEntry() != null) {
             return client.getCurrentServerEntry().address.replace(":", "_").replace("/", "_");
         }
