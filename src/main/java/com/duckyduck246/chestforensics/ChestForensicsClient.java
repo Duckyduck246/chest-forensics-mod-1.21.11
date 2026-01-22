@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class ChestForensicsClient implements ClientModInitializer {
-    public static final String MOD_ID = "chat-logger";
+    public static final String MOD_ID = "chest-forensics";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static String containerName = "not yet";
     int containerID = 0;

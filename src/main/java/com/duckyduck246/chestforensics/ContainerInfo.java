@@ -182,21 +182,23 @@ public class ContainerInfo {
 
         for(int i = 0; i < oldStack.size(); i++){
             if(i < currentStack.size()){
-                ItemStack stackA = oldStack.get(i);
-                ItemStack stackB = currentStack.get(i);
-                int countA = stackA.getCount();
-                int countB = stackB.getCount();
-                if(!((ItemStack.areItemsAndComponentsEqual(stackA, stackB)) && (countA == countB))) {
-                    if (ItemStack.areItemsAndComponentsEqual(stackA, stackB)) {
+                ItemStack itemStackA = oldStack.get(i);
+                ItemStack itemStackB = currentStack.get(i);
+                String stackA = ForensicsNbt.toJsonString(itemStackA);
+                String stackB = ForensicsNbt.toJsonString(itemStackB);
+                int countA = itemStackA.getCount();
+                int countB = itemStackB.getCount();
+                if(!((stackA.equals(stackB)) && (countA == countB))) {
+                    if (stackA.equals(stackB)) {
                         ChestForensicsClient.LOGGER.info("index: " + i);
-                        PuedoItem itemStack = new PuedoItem(stackB.getCount() - stackA.getCount(), stackA.getComponents(), stackA.getName().getString(), ForensicsNbt.toJsonString(stackA));
+                        PuedoItem itemStack = new PuedoItem(itemStackB.getCount() - itemStackA.getCount(), itemStackA.getComponents(), itemStackA.getName().getString(), stackA);
                         diff.add(itemStack);
                     } else {
                         ChestForensicsClient.LOGGER.info("index: " + i);
-                        ChestForensicsClient.LOGGER.info(stackB.getComponents().toString());
-                        PuedoItem itemStack1 = new PuedoItem(-stackA.getCount(), stackA.getComponents(), stackA.getName().getString(), ForensicsNbt.toJsonString(stackA));
+                        ChestForensicsClient.LOGGER.info(itemStackB.getComponents().toString());
+                        PuedoItem itemStack1 = new PuedoItem(-itemStackA.getCount(), itemStackA.getComponents(), itemStackA.getName().getString(), stackA);
                         diff.add(itemStack1);
-                        PuedoItem itemStack2 = new PuedoItem(stackB.getCount(), stackB.getComponents(), stackB.getName().getString(), ForensicsNbt.toJsonString(stackB));
+                        PuedoItem itemStack2 = new PuedoItem(itemStackB.getCount(), itemStackB.getComponents(), itemStackB.getName().getString(), stackB);
                         diff.add(itemStack2);
                     }
                 }
