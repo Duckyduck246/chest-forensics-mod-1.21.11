@@ -1,11 +1,12 @@
 package com.duckyduck246.chestforensics;
 
+import com.google.gson.*;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import net.minecraft.registry.RegistryOps;
+import net.minecraft.client.MinecraftClient;
 
 import java.util.ArrayList;
 
@@ -13,10 +14,12 @@ public class ForensicsNbt {
 
     public static ArrayList<String> toJsonString(ArrayList<ItemStack> stacks) {
         ArrayList<String> returned = new ArrayList<>();
+        var registryManager = MinecraftClient.getInstance().getNetworkHandler().getRegistryManager();
+        var ops = RegistryOps.of(JsonOps.INSTANCE, registryManager);
         for (ItemStack stack : stacks) {
-            DataResult<JsonElement> result = ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, stack);
+            DataResult<JsonElement> result = ItemStack.CODEC.encodeStart(ops, stack);
             result.result().ifPresentOrElse(
-                    json -> returned.add(json.toString()),
+                    json -> returned.add(normalize(json.toString())),
                     () -> returned.add("{}")
             );
         }
@@ -25,10 +28,12 @@ public class ForensicsNbt {
 
     public static ArrayList<ItemStack> fromJsonString(ArrayList<String> stringJson) {
         ArrayList<ItemStack> returned = new ArrayList<>();
+        var registryManager = MinecraftClient.getInstance().getNetworkHandler().getRegistryManager();
+        var ops = RegistryOps.of(JsonOps.INSTANCE, registryManager);
         for (String jsonStr : stringJson) {
             try {
                 JsonElement element = JsonParser.parseString(jsonStr);
-                DataResult<ItemStack> result = ItemStack.CODEC.parse(JsonOps.INSTANCE, element);
+                DataResult<ItemStack> result = ItemStack.CODEC.parse(ops, element);
                 result.result().ifPresentOrElse(
                         returned::add,
                         () -> returned.add(ItemStack.EMPTY)
@@ -40,18 +45,72 @@ public class ForensicsNbt {
     }
     
     public static String toJsonString(ItemStack stack) {
-        DataResult<JsonElement> result = ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, stack);
-        return result.result().map(JsonElement::toString).orElse("{}");
+        var registryManager = MinecraftClient.getInstance().getNetworkHandler().getRegistryManager();
+        var ops = RegistryOps.of(JsonOps.INSTANCE, registryManager);
+        DataResult<JsonElement> result = ItemStack.CODEC.encodeStart(ops, stack);
+        return result.result().map(e -> normalize(e.toString())).orElse("{}");
     }
 
     public static ItemStack fromJsonString(String stringJson) {
         try{
+            var registryManager = MinecraftClient.getInstance().getNetworkHandler().getRegistryManager();
+            var ops = RegistryOps.of(JsonOps.INSTANCE, registryManager);
             JsonElement element = JsonParser.parseString(stringJson);
-            DataResult<ItemStack> result = ItemStack.CODEC.parse(JsonOps.INSTANCE, element);
+            DataResult<ItemStack> result = ItemStack.CODEC.parse(ops, element);
             return result.result().orElse(ItemStack.EMPTY);
             
         } catch(Exception e){}
         ChestForensicsClient.LOGGER.info("failed to get itemstack from json string");
         return ItemStack.EMPTY;
+    }
+    public static String normalize(String json){
+        JsonElement root = JsonParser.parseString(json);
+        JsonElement normalized = norm(root);
+        return normalized.toString();
+    }
+    public static JsonElement norm(JsonElement json){
+        if(json.isJsonObject()){
+            JsonObject object = new JsonObject();
+            for(var thing : json.getAsJsonObject().entrySet()){
+                object.add(thing.getKey(), norm(thing.getValue()));
+            }
+            return object;
+        }
+        if(json.isJsonArray()){
+            JsonArray array = new JsonArray();
+            for(var thing : json.getAsJsonArray()){
+                array.add(norm(thing));
+            }
+            return array;
+        }
+        if(json.isJsonPrimitive()){
+            JsonPrimitive primitive = json.getAsJsonPrimitive();
+            if(primitive.isNumber()){
+                double v = primitive.getAsDouble();
+                ChestForensicsClient.LOGGER.info("difference: " + Math.abs(primitive.getAsInt() - v));
+                double nearestTenth = Math.round(v * 10.0) / 10.0;
+                if (Math.abs(primitive.getAsInt() - v) < 0.0000001) {
+                    v = (int)v;
+                }
+                ChestForensicsClient.LOGGER.info("tenth difference: " + Math.abs(nearestTenth - v));
+                boolean temp = false;
+                if (Math.abs(nearestTenth - v) < 0.0000001 && !(Math.abs(nearestTenth - v) == 0)) {
+                    v = nearestTenth;
+                    temp = true;
+                    ChestForensicsClient.LOGGER.info("rounded to nearest tenth: " + v);
+                }
+                if (v == Math.rint(v)) {
+                    ChestForensicsClient.LOGGER.info("returned v: " + (long) v);
+                    return new JsonPrimitive((long) v);
+                }
+                else if(temp){
+                    return new JsonPrimitive(v);
+                }
+            }
+
+            return primitive;
+        }
+        return json;
+
     }
 }

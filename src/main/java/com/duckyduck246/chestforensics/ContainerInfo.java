@@ -67,7 +67,9 @@ public class ContainerInfo {
     public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Identifier b){
         type = t;
         pos = p;
+        ChestForensicsClient.LOGGER.info("before:" + i);
         items = ForensicsNbt.toJsonString(i);
+        ChestForensicsClient.LOGGER.info("after" + items);
         tags = a;
         dimension = b;
         id = "containerId:" + type + pos.toString() + dimension.toString();
@@ -177,6 +179,8 @@ public class ContainerInfo {
     public static ArrayList<PuedoItem> compareItems(ArrayList<ItemStack> oldStack, ArrayList<ItemStack> currentStack){
         ChestForensicsClient.LOGGER.info("compareItems method called");
         ArrayList<PuedoItem> diff = new ArrayList<>();
+        ChestForensicsClient.LOGGER.info("old contents: " + oldStack);
+        ChestForensicsClient.LOGGER.info("new contents: " + currentStack);
         ChestForensicsClient.LOGGER.info("old size: " + oldStack.size());
         ChestForensicsClient.LOGGER.info("new size: " + currentStack.size());
 

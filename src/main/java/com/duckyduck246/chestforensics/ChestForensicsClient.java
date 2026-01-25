@@ -41,6 +41,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class ChestForensicsClient implements ClientModInitializer {
@@ -56,6 +57,8 @@ public class ChestForensicsClient implements ClientModInitializer {
     boolean allAir;
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static Identifier dimension;
+    public static ArrayList<String> defaultTags = new ArrayList<>(List.of("all"));
+
 
     @Override
     public void onInitializeClient(){
@@ -120,7 +123,8 @@ public class ChestForensicsClient implements ClientModInitializer {
 
                         LOGGER.info("Name: " + containerName);
                         LOGGER.info("ID: " + containerID);
-                        if (Objects.equals(containerName, "Large Chest")) {
+
+                        if (getIfDoubleChest(client.world.getBlockEntity(detectedPos))) {
                             LOGGER.info("is a large chest");
                             BlockPos mainContainer;
                             BlockPos subContainer;
@@ -130,16 +134,16 @@ public class ChestForensicsClient implements ClientModInitializer {
 
                                 LOGGER.info("Pos" + mainContainer);
 
-                                addContainerInfo(containerName, mainContainer, ContainerInfo.listItems(2), new ArrayList<String>(), subContainer, dimension);
+                                addContainerInfo(containerName, mainContainer, ContainerInfo.listItems(2), defaultTags, subContainer, dimension);
                             }
                             else{
                                 LOGGER.info("ERROR: WORLD NOT INSTANTIATED");
-                                addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(2), new ArrayList<String>(), dimension);
+                                addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(2), defaultTags, dimension);
                             }
                         }
                         else {
                             LOGGER.info("Pos" + detectedPos);
-                            addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(2), new ArrayList<String>(), dimension);
+                            addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(1), defaultTags, dimension);
                         }
                         saveContainersToTXT();
 
@@ -224,7 +228,7 @@ public class ChestForensicsClient implements ClientModInitializer {
             LOGGER.info("" + Objects.requireNonNull(detectedPos));
 
 
-            if (Objects.equals(containerName, "Large Chest")) {
+            if (getIfDoubleChest(client.world.getBlockEntity(detectedPos))) {
                 LOGGER.info("is a large chest");
                 BlockPos mainContainer;
                 BlockPos subContainer;
@@ -373,6 +377,23 @@ public class ChestForensicsClient implements ClientModInitializer {
         }
 
         return blockEntity.getPos();
+    }
+
+
+    public static boolean getIfDoubleChest(BlockEntity blockEntity){
+        LOGGER.info("getIfDoubleChest method called");
+        if (!(blockEntity instanceof ChestBlockEntity chest)){
+            LOGGER.info("not a chest");
+            return false;
+        }
+        ChestType type = chest.getCachedState().get(ChestBlock.CHEST_TYPE);
+        if (type == ChestType.SINGLE){
+            LOGGER.info("single chest");
+            return false;
+        }
+
+        return true;
+
     }
 
     public static BlockPos getSubContainer(BlockEntity blockEntity){
