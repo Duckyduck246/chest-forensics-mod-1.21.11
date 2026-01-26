@@ -87,20 +87,18 @@ public class ForensicsNbt {
             JsonPrimitive primitive = json.getAsJsonPrimitive();
             if(primitive.isNumber()){
                 double v = primitive.getAsDouble();
-                ChestForensicsClient.LOGGER.info("difference: " + Math.abs(primitive.getAsInt() - v));
+
                 double nearestTenth = Math.round(v * 10.0) / 10.0;
                 if (Math.abs(primitive.getAsInt() - v) < 0.0000001) {
                     v = (int)v;
                 }
-                ChestForensicsClient.LOGGER.info("tenth difference: " + Math.abs(nearestTenth - v));
+
                 boolean temp = false;
                 if (Math.abs(nearestTenth - v) < 0.0000001 && !(Math.abs(nearestTenth - v) == 0)) {
                     v = nearestTenth;
                     temp = true;
-                    ChestForensicsClient.LOGGER.info("rounded to nearest tenth: " + v);
                 }
                 if (v == Math.rint(v)) {
-                    ChestForensicsClient.LOGGER.info("returned v: " + (long) v);
                     return new JsonPrimitive((long) v);
                 }
                 else if(temp){

@@ -143,7 +143,7 @@ public class ChestForensicsClient implements ClientModInitializer {
                         }
                         else {
                             LOGGER.info("Pos" + detectedPos);
-                            addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(1), defaultTags, dimension);
+                            addContainerInfo(containerName, detectedPos, ContainerInfo.listItems(2), defaultTags, dimension);
                         }
                         saveContainersToTXT();
 
