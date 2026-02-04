@@ -65,7 +65,7 @@ public class ForensicsNbt {
     }
     public static String normalize(String json){
         JsonElement root = JsonParser.parseString(json);
-        JsonElement normalized = norm(root);
+        JsonElement normalized = sort(norm(root));
         return normalized.toString();
     }
     public static JsonElement norm(JsonElement json){
@@ -110,5 +110,22 @@ public class ForensicsNbt {
         }
         return json;
 
+    }
+    public static JsonElement sort(JsonElement json){
+        if(json.isJsonObject()){
+            JsonObject input = json.getAsJsonObject();
+            JsonObject output = new JsonObject();
+            input.entrySet().stream().sorted(java.util.Map.Entry.comparingByKey()).forEach(entry -> output.add(entry.getKey(), sort(entry.getValue())));
+            return output;
+        }
+        if(json.isJsonArray()){
+            JsonArray input = json.getAsJsonArray();
+            JsonArray output = new JsonArray();
+            for(JsonElement element : input){
+                output.add(sort(element));
+            }
+            return output;
+        }
+        return json;
     }
 }

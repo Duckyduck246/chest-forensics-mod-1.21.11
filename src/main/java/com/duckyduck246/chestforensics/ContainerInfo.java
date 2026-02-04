@@ -67,9 +67,9 @@ public class ContainerInfo {
     public ContainerInfo(String t, BlockPos p, ArrayList<ItemStack> i, ArrayList<String> a, Identifier b){
         type = t;
         pos = p;
-        ChestForensicsClient.LOGGER.info("before:" + i);
+        //ChestForensicsClient.LOGGER.info("before:" + i);
         items = ForensicsNbt.toJsonString(i);
-        ChestForensicsClient.LOGGER.info("after" + items);
+        //ChestForensicsClient.LOGGER.info("after" + items);
         tags = a;
         dimension = b;
         id = "containerId:" + type + pos.toString() + dimension.toString();
@@ -112,7 +112,7 @@ public class ContainerInfo {
         if(doubleChest){
             ChestForensicsClient.LOGGER.info("other pos: " + id);
         }
-        ChestForensicsClient.LOGGER.info("items: " + items);   
+        //ChestForensicsClient.LOGGER.info("items: " + items);
     }
     
     public void logTotal(){
@@ -135,7 +135,7 @@ public class ContainerInfo {
                                 String nameOfItem = stack.getItem().getName().getString();
                                 String dataOfItem = stack.getComponents().toString();
                                 int count = stack.getCount();
-                                ChestForensicsClient.LOGGER.info(a + ": " + count + "x " + nameOfItem + "      (" + dataOfItem + ")");
+                                //ChestForensicsClient.LOGGER.info(a + ": " + count + "x " + nameOfItem + "      (" + dataOfItem + ")");
                             }
                             else {
                             }
@@ -179,8 +179,8 @@ public class ContainerInfo {
     public static ArrayList<PuedoItem> compareItems(ArrayList<ItemStack> oldStack, ArrayList<ItemStack> currentStack){
         ChestForensicsClient.LOGGER.info("compareItems method called");
         ArrayList<PuedoItem> diff = new ArrayList<>();
-        ChestForensicsClient.LOGGER.info("old contents: " + oldStack);
-        ChestForensicsClient.LOGGER.info("new contents: " + currentStack);
+        //ChestForensicsClient.LOGGER.info("old contents: " + oldStack);
+        //ChestForensicsClient.LOGGER.info("new contents: " + currentStack);
         ChestForensicsClient.LOGGER.info("old size: " + oldStack.size());
         ChestForensicsClient.LOGGER.info("new size: " + currentStack.size());
 
@@ -194,12 +194,12 @@ public class ContainerInfo {
                 int countB = itemStackB.getCount();
                 if(!((stackA.equals(stackB)) && (countA == countB))) {
                     if (stackA.equals(stackB)) {
-                        ChestForensicsClient.LOGGER.info("index: " + i);
+                        //ChestForensicsClient.LOGGER.info("index: " + i);
                         PuedoItem itemStack = new PuedoItem(itemStackB.getCount() - itemStackA.getCount(), itemStackA.getComponents(), itemStackA.getName().getString(), stackA);
                         diff.add(itemStack);
                     } else {
-                        ChestForensicsClient.LOGGER.info("index: " + i);
-                        ChestForensicsClient.LOGGER.info(itemStackB.getComponents().toString());
+                        //ChestForensicsClient.LOGGER.info("index: " + i);
+                        //ChestForensicsClient.LOGGER.info(itemStackB.getComponents().toString());
                         PuedoItem itemStack1 = new PuedoItem(-itemStackA.getCount(), itemStackA.getComponents(), itemStackA.getName().getString(), stackA);
                         diff.add(itemStack1);
                         PuedoItem itemStack2 = new PuedoItem(itemStackB.getCount(), itemStackB.getComponents(), itemStackB.getName().getString(), stackB);
@@ -208,7 +208,7 @@ public class ContainerInfo {
                 }
             }
         }
-        ChestForensicsClient.LOGGER.info("returned diff: " + diff);
+        //ChestForensicsClient.LOGGER.info("returned diff: " + diff);
         return diff;
     }
 

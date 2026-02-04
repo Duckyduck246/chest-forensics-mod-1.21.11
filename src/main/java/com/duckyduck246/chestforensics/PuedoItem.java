@@ -38,7 +38,7 @@ public class PuedoItem {
         itemComponents = m.toString();
         name = n;
         nbt = a;
-        ChestForensicsClient.LOGGER.info("new PuedoItem created: count: " + c + "componets: " + m + "nbt: " + a);
+        //ChestForensicsClient.LOGGER.info("new PuedoItem created: count: " + c + "componets: " + m + "nbt: " + a);
     }
     public String getString(){
         return count + "x " + name +  "            " + itemComponents.toString() + "             " + nbt;

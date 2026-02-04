@@ -246,11 +246,11 @@ public class ChestForensicsClient implements ClientModInitializer {
             LOGGER.info("got after geting id");
             for (int j = 0; j < allContainers.size(); j++) {
                 if (allContainers.get(j).id.equals(id)) {
-                    LOGGER.info("new stack:" + ContainerInfo.listItems(2));
+                    //LOGGER.info("new stack:" + ContainerInfo.listItems(2));
                     compared = ContainerInfo.compareItems(ForensicsNbt.fromJsonString(allContainers.get(j).items), ContainerInfo.listItems(2));
                 }
             }
-            LOGGER.info("returned compared: " + compared);
+            //LOGGER.info("returned compared: " + compared);
             return compared;
         }
         return compared;
@@ -273,10 +273,6 @@ public class ChestForensicsClient implements ClientModInitializer {
                 writer.write("Container Type: " + container.type  + "\n");
                 writer.write("Pos: " + container.pos  + "\n");
                 writer.write("ID: " + container.id  + "\n");
-                writer.write("Items: ");
-                for(String item : container.items){
-                    writer.write("(" + item + ") ");
-                }
                 writer.write("\n\n");
             }
             LOGGER.info("exported to da txt");

@@ -51,7 +51,7 @@ public abstract class ContainerDetectionMixin{
                 for (int i = 0; i < Math.min(stacks.size(), containerSize); i++) {
                     ItemStack stack = stacks.get(i);
                     if (!stack.isEmpty()) {
-                        ChestForensicsClient.LOGGER.info("Slot " + i + ": " + stack.getName().getString() + " x" + stack.getCount());
+                        //ChestForensicsClient.LOGGER.info("Slot " + i + ": " + stack.getName().getString() + " x" + stack.getCount());
                     }
                 }
                 if(detectedPos == null){
