@@ -65,7 +65,9 @@ public class ForensicsNbt {
     }
     public static String normalize(String json){
         JsonElement root = JsonParser.parseString(json);
+        ChestForensicsClient.LOGGER.info("before sorting: " + norm(root));
         JsonElement normalized = sort(norm(root));
+        ChestForensicsClient.LOGGER.info("after sorting: " + normalized);
         return normalized.toString();
     }
     public static JsonElement norm(JsonElement json){
