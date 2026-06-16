@@ -118,7 +118,7 @@ public class ContainerInfo {
         switch(mode) {
             case 1:
                 if(client.player != null && client.player.containerMenu != null) {
-                    if (client.screen instanceof AbstractContainerScreen<?> handledScreen) {
+                    if (client.gui.screen() instanceof AbstractContainerScreen<?> handledScreen) {
                         AbstractContainerMenu handler = handledScreen.getMenu();
                         ArrayList<ItemStack> items = new ArrayList<ItemStack>();
                         if(loggingMode > 1)
@@ -152,7 +152,7 @@ public class ContainerInfo {
                 break;
             case 2:
                 if(client.player != null && client.player.containerMenu != null) {
-                    if (client.screen instanceof AbstractContainerScreen<?> handledScreen) {
+                    if (client.gui.screen() instanceof AbstractContainerScreen<?> handledScreen) {
                         AbstractContainerMenu handler = handledScreen.getMenu();
                         ArrayList<ItemStack> items = new ArrayList<ItemStack>();
                         for (int a = 0; a < handler.slots.size(); a++) {

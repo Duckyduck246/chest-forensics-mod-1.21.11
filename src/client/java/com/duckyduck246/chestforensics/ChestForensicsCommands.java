@@ -74,7 +74,6 @@ public class ChestForensicsCommands {
                                                     context.getSource().sendFeedback(feedback);
                                                     return 1;
                                                 }
-
                                         })
                                 )
                 );

@@ -41,7 +41,7 @@ public abstract class ContainerDetectionMixin{
 
     private void processBulkUpdate(List<ItemStack> stacks){
         Minecraft client = Minecraft.getInstance();
-        if (client.screen instanceof AbstractContainerScreen<?> handledScreen){
+        if (client.gui.screen() instanceof AbstractContainerScreen<?> handledScreen){
             if (handledScreen.getMenu() instanceof ChestMenu container) {
                 int containerSize = container.getRowCount() * 9;
                 if(loggingMode > 1)
@@ -126,7 +126,7 @@ public abstract class ContainerDetectionMixin{
 
     private void processSingleUpdate(int slotIndex, ItemStack stack){
         Minecraft client = Minecraft.getInstance();
-        if (client.screen instanceof AbstractContainerScreen<?> handledScreen) {
+        if (client.gui.screen() instanceof AbstractContainerScreen<?> handledScreen) {
             if (handledScreen.getMenu() instanceof ChestMenu container) {
                 int containerSize = container.getRowCount() * 9;
                 if (slotIndex < containerSize) {

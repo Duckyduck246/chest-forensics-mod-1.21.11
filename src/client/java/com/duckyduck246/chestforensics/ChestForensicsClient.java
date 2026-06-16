@@ -120,7 +120,7 @@ public class ChestForensicsClient implements ClientModInitializer {
                         return;
                     }
 
-                    net.minecraft.network.chat.Component screenTitley = client.screen.getTitle();
+                    net.minecraft.network.chat.Component screenTitley = client.gui.screen().getTitle();
                     String keyThing = "";
                     if (screenTitley.getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents translatable) {
                         keyThing = translatable.getKey();
@@ -239,7 +239,7 @@ public class ChestForensicsClient implements ClientModInitializer {
     public static ArrayList<PuedoItem> getCompare(){
         Minecraft client = Minecraft.getInstance();
         ArrayList<PuedoItem> compared = new ArrayList<>();
-        if (client.screen instanceof AbstractContainerScreen<?> handledScreen) {
+        if (client.gui.screen() instanceof AbstractContainerScreen<?> handledScreen) {
             AbstractContainerMenu handler = handledScreen.getMenu();
             id = "ERROR 1389843204";
             if(loggingMode > 1) {
